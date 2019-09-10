@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class EmailGroupService
@@ -22,5 +24,14 @@ public class EmailGroupService
     private boolean groupNameValidation(String name)
     {
         return name != null && !name.equals("");
+    }
+
+    public List<EmailGroup> getAllGroups() throws NoSuchFieldException
+    {
+        List<EmailGroup> groups = new ArrayList<>();
+        emailGroupRepository.findAll().forEach(groups::add);
+
+        if(groups.isEmpty()) throw new NoSuchFieldException("There is no groups!");
+        return groups;
     }
 }

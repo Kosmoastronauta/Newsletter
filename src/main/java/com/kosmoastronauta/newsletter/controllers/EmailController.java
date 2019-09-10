@@ -18,7 +18,7 @@ public class EmailController
     EmailService emailService;
 
     @GetMapping(path = "/emails/")
-    public ResponseEntity<List<EmailAddress>> getBooks()
+    public ResponseEntity<List<EmailAddress>> getEmails()
     {
         List<EmailAddress> emails = emailService.getAllEmails();
         if(emails.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);

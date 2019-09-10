@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,13 +34,15 @@ public class EmailGroupController
     public ResponseEntity<List<EmailGroup>> getAllGroups()
     {
         List<EmailGroup> groups;
-        try
-        {
-            groups = emailGroupService.getAllGroups();
-        }catch(NoSuchFieldError e)
-        {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<groups>(HttpStatus.OK);
+
+         try
+         {
+             groups = emailGroupService.getAllGroups();
+
+         }catch(NoSuchFieldException e)
+         {
+             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+         }
+        return new ResponseEntity<>(groups, HttpStatus.OK);
     }
 }
