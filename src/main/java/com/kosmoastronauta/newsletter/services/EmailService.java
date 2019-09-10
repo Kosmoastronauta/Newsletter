@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class EmailService
 {
-
 
     @Autowired
    EmailRepository emailRepository;
@@ -37,14 +37,23 @@ public class EmailService
     {
         for(int i = 0; i < message.getGroups().size(); i++)
         {
-            sendEmailToGroup(message.getGroups().get(i),message.getSubject(),message.getBody());
+            try
+            {
+                sendEmailToGroup(message.getGroups().get(i), message.getSubject(), message.getBody());
+            }catch(NoSuchElementException e)
+            {
+                // Info in method what throws that exception
+            }
         }
     }
 
-    public void sendEmailToGroup(String group, String subject, String body)
+    public void sendEmailToGroup(String group, String subject, String body) throws NoSuchElementException
     {
         List<EmailAddress> emailAddresses;
         emailAddresses = emailRepository.getEmailAddressesByGroupEmailEquals(group);
+
+        if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group named: " + group);
+
         for(int i = 0; i < emailAddresses.size(); i++)
         {
             try
