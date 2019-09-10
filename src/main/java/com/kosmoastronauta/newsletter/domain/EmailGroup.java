@@ -1,7 +1,6 @@
 package com.kosmoastronauta.newsletter.domain;
 
-import org.hibernate.annotations.Entity;
-
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
