@@ -86,6 +86,7 @@ public class EmailService
     {
         if(emailValidation(emailAddress))
         {
+            emailAddress.setActive(true);
             emailRepository.save(emailAddress);
         }
         else throw new InvalidParameterException("Email address is invalid");
@@ -100,4 +101,5 @@ public class EmailService
             emailAddress.setGroup("standard");
         return emailAddress.getAddress().matches(regex);
     }
+
 }
