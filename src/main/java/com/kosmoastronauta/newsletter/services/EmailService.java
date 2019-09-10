@@ -64,8 +64,8 @@ public class EmailService
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(emailAddress.getAddress());
             mail.setFrom("bartek@testerprogramuje.pl");
-            mail.setSubject("Testing Newsletter");
-            mail.setText("Ja nie dam rady?");
+            mail.setSubject(subject);
+            mail.setText(body);
             javaMailSender.send(mail);
         }catch(MailException e)
         {

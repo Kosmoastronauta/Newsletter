@@ -11,6 +11,23 @@ public class EmailAddress
 
     private String address;
     private String groupEmail;
+    private boolean active;
+
+    public String getGroupEmail() {
+        return groupEmail;
+    }
+
+    public void setGroupEmail(String groupEmail) {
+        this.groupEmail = groupEmail;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public long getId() {
         return id;
