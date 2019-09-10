@@ -110,4 +110,7 @@ public class EmailService
     {
         emailRepository.deleteById(id);
     }
+
+    public void sendEmailToAll(Message message) {
+    }
 }

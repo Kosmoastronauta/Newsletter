@@ -39,12 +39,21 @@ public class EmailController
         return new ResponseEntity<>(emailAddress, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/send/", consumes = "application/json")
-    public ResponseEntity<EmailAddress> sendEmail(@RequestBody Message message)
+    @PostMapping(path = "/send/groups/", consumes = "application/json")
+    public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody Message message)
     {
             emailService.sendEmailToGroups(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PostMapping(path = "/send/all/", consumes = "application/json")
+    public ResponseEntity<EmailAddress> sendEmailToAll(@RequestBody Message message)
+    {
+        emailService.sendEmailToAll(message);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 
     @DeleteMapping(path = "/email/{id}")
     public ResponseEntity<EmailAddress> deleteEmail(@PathVariable long id)
