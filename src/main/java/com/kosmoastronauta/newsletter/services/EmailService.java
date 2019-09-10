@@ -72,11 +72,11 @@ public class EmailService
         try
         {
             Properties properties = new Properties();
-            String mailFom = properties.getProperty("spring.mail.username");
+            String mailFrom = properties.getProperty("spring.mail.username");
             System.out.println("Sending to: " + emailAddress.getAddress());
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(emailAddress.getAddress());
-            mail.setFrom("mailFrom");
+            mail.setFrom(mailFrom);
             mail.setSubject(subject);
             mail.setText(body);
 
