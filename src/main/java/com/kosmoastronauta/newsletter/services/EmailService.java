@@ -22,7 +22,6 @@ import java.util.logging.Logger;
 @Service
 public class EmailService
 {
-
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
     @Autowired
    EmailRepository emailRepository;
