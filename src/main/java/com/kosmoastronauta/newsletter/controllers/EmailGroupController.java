@@ -5,12 +5,10 @@ import com.kosmoastronauta.newsletter.services.EmailGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 
 @RestController
 public class EmailGroupController
@@ -29,5 +27,19 @@ public class EmailGroupController
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<EmailGroup>(emailGroup, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/groups/")
+    public ResponseEntity<List<EmailGroup>> getAllGroups()
+    {
+        List<EmailGroup> groups;
+        try
+        {
+            groups = emailGroupService.getAllGroups();
+        }catch(NoSuchFieldError e)
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<groups>(HttpStatus.OK);
     }
 }
