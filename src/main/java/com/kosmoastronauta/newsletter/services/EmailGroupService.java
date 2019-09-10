@@ -13,16 +13,14 @@ public class EmailGroupService
     @Autowired
     EmailGroupRepository emailGroupRepository;
 
-    public void addGroup(String name)
+    public void addGroup(EmailGroup emailGroup)
     {
-        if(groupNameValidation(name)) throw new InvalidParameterException("group name can't be empty");
-        EmailGroup emailGroup = new EmailGroup(name);
+        if(groupNameValidation(emailGroup.getName())) throw new InvalidParameterException("group name can't be empty");
         emailGroupRepository.save(emailGroup);
     }
 
     private boolean groupNameValidation(String name)
     {
-        if(name.equals("") || name==null) return false;
-        return true;
+        return name != null && !name.equals("");
     }
 }
