@@ -47,10 +47,10 @@ public class EmailService
             {
                 try
                 {
-                    sendEmail(emailAddresses.get(i),subject,body);
+                    sendEmail(emailAddresses.get(j),subject,body);
                 }catch(MailException e)
                 {
-                    System.out.println("Error: Mail to: +" + emailAddresses.get(i).getAddress() + " wasn't sent !");
+                    System.out.println("Error: Mail to: +" + emailAddresses.get(j).getAddress() + " wasn't sent !");
                 }
             }
         }
