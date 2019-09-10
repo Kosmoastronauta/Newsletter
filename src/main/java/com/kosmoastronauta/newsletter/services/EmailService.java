@@ -33,25 +33,26 @@ public class EmailService
         return emails;
     }
 
-    public void sendEmailToGroup(Message message)
+    public void sendEmailToGroups(Message message)
     {
-        String subject;
-        String body;
-        subject = message.getSubject();
-        body = message.getBody();
-        List<EmailAddress> emailAddresses;
         for(int i = 0; i < message.getGroups().size(); i++)
         {
-            emailAddresses = emailRepository.getEmailAddressesByGroupEmailEquals(message.getGroups().get(i));
-            for(int j = 0; j < emailAddresses.size(); j++)
+            sendEmailToGroup(message.getGroups().get(i),message.getSubject(),message.getBody());
+        }
+    }
+
+    public void sendEmailToGroup(String group, String subject, String body)
+    {
+        List<EmailAddress> emailAddresses;
+        emailAddresses = emailRepository.getEmailAddressesByGroupEmailEquals(group);
+        for(int i = 0; i < emailAddresses.size(); i++)
+        {
+            try
             {
-                try
-                {
-                    sendEmail(emailAddresses.get(j),subject,body);
-                }catch(MailException e)
-                {
-                    System.out.println("Error: Mail to: +" + emailAddresses.get(j).getAddress() + " wasn't sent !");
-                }
+                sendEmail(emailAddresses.get(i),subject,body);
+            }catch(MailException e)
+            {
+                System.out.println("Error: Mail to: +" + emailAddresses.get(i).getAddress() + " wasn't sent !");
             }
         }
     }
