@@ -17,11 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 @Service
 public class EmailService
 {
 
+    private final static Logger logger = Logger.getLogger(EmailService.class.getName());
     @Autowired
    EmailRepository emailRepository;
 
@@ -33,13 +35,11 @@ public class EmailService
         List<EmailAddress> emails = new ArrayList<>();
         emailRepository.findAll().forEach(emails::add);
 
-        System.out.println(emails.size());
         return emails;
     }
 
     public void sendEmailToGroups(Message message)
     {
-        System.out.println("Number Of Groups to send:  " + message.getGroups().size());
         for(int i = 0; i < message.getGroups().size(); i++)
         {
             try
@@ -47,7 +47,7 @@ public class EmailService
                 sendEmailToGroup(message.getGroups().get(i), message.getSubject(), message.getBody());
             }catch(NoSuchElementException e)
             {
-                System.out.println(e.getMessage());
+                logger.info(e.getMessage());
             }
         }
     }
@@ -66,7 +66,7 @@ public class EmailService
                 sendEmail(emailAddresses.get(i),subject,body);
             }catch(MailException e)
             {
-                System.out.println("Error: Mail to: +" + emailAddresses.get(i).getAddress() + " wasn't sent !");
+                logger.info("Error: Mail to: +" + emailAddresses.get(i).getAddress() + " wasn't sent !");
             }
         }
     }
@@ -79,7 +79,6 @@ public class EmailService
             InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
             properties.load(input);
             String mailFrom = properties.getProperty("spring.mail.username");
-            System.out.println("Sending to: " + emailAddress.getAddress());
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(emailAddress.getAddress());
             mail.setFrom(mailFrom);
@@ -91,7 +90,7 @@ public class EmailService
 
         }catch(MailException e)
         {
-            System.out.println("Invalid address!!!");
+            logger.info("Invalid address");
         }
         catch(IOException e)
         {

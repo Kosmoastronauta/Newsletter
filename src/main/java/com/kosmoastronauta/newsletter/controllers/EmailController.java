@@ -13,7 +13,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.List;
-import java.util.Properties;
 
 @RestController
 public class EmailController
@@ -23,7 +22,7 @@ public class EmailController
     EmailService emailService;
 
     @GetMapping(path = "/emails/")
-    public ResponseEntity<List<EmailAddress>> getBooks() throws Exception
+    public ResponseEntity<List<EmailAddress>> getBooks()
     {
         List<EmailAddress> emails = emailService.getAllEmails();
         if(emails.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,7 +46,7 @@ public class EmailController
     @PostMapping(path = "/send/groups/", consumes = "application/json")
     public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody Message message)
     {
-            emailService.sendEmailToGroups(message);
+        emailService.sendEmailToGroups(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
