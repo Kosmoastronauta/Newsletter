@@ -75,7 +75,10 @@ public class EmailService
             mail.setFrom("bartek@testerprogramuje.pl");
             mail.setSubject(subject);
             mail.setText(body);
+
+            if(emailAddress.isActive())
             javaMailSender.send(mail);
+
         }catch(MailException e)
         {
             throw new InvalidParameterException("Invalid address!!");
