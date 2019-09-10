@@ -10,4 +10,6 @@ import java.util.List;
 public interface EmailRepository extends CrudRepository<EmailAddress, Long>
 {
     public List<EmailAddress> getEmailAddressesByGroupEmailEquals(String groupEmail);
+
+    public List<EmailAddress> getEmailAddressesByActiveIsTrue();
 }

@@ -112,5 +112,6 @@ public class EmailService
     }
 
     public void sendEmailToAll(Message message) {
+
     }
 }
