@@ -1,10 +1,8 @@
 package com.kosmoastronauta.newsletter.services;
 
-import com.kosmoastronauta.newsletter.controllers.EmailController;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -36,6 +34,7 @@ public class EmailService
 
     public void sendEmailToGroups(Message message)
     {
+        System.out.println("Number Of Groups to send:  " + message.getGroups().size());
         for(int i = 0; i < message.getGroups().size(); i++)
         {
             try
@@ -43,7 +42,7 @@ public class EmailService
                 sendEmailToGroup(message.getGroups().get(i), message.getSubject(), message.getBody());
             }catch(NoSuchElementException e)
             {
-                // Info in method what throws that exception
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -71,6 +70,7 @@ public class EmailService
     {
         try
         {
+            System.out.println("Sending to: " + emailAddress.getAddress());
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(emailAddress.getAddress());
             mail.setFrom("bartek@testerprogramuje.pl");

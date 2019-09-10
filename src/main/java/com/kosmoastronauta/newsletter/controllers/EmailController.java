@@ -3,13 +3,10 @@ package com.kosmoastronauta.newsletter.controllers;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.services.EmailService;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.InvalidParameterException;
 import java.util.List;
 
