@@ -53,8 +53,6 @@ public class EmailController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-
     @DeleteMapping(path = "/email/{id}")
     public ResponseEntity<EmailAddress> deleteEmail(@PathVariable long id)
     {

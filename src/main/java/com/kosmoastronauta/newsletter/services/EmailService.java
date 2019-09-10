@@ -3,7 +3,6 @@ package com.kosmoastronauta.newsletter.services;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
-import org.apache.catalina.authenticator.jaspic.PersistentProviderRegistrations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -115,7 +114,15 @@ public class EmailService
         emailRepository.deleteById(id);
     }
 
-    public void sendEmailToAll(Message message) {
+    public void sendEmailToAll(Message message)
+    {
+        List<EmailAddress> emailAddresses = emailRepository.getEmailAddressesByActiveIsTrue();
 
+        String subject = message.getSubject();
+        String body = message.getBody();
+        for(EmailAddress emailAddress : emailAddresses)
+        {
+            sendEmail(emailAddress, subject, body);
+        }
     }
 }
