@@ -3,6 +3,7 @@ package com.kosmoastronauta.newsletter.services;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
+import org.apache.catalina.authenticator.jaspic.PersistentProviderRegistrations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,6 +13,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 
 @Service
 public class EmailService
@@ -70,10 +72,12 @@ public class EmailService
     {
         try
         {
+            Properties properties = new Properties();
+            String mailFom = properties.getProperty("spring.mail.username");
             System.out.println("Sending to: " + emailAddress.getAddress());
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(emailAddress.getAddress());
-            mail.setFrom("bartek@testerprogramuje.pl");
+            mail.setFrom("mailFrom");
             mail.setSubject(subject);
             mail.setText(body);
 
