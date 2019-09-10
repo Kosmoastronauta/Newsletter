@@ -30,6 +30,7 @@ public class EmailService
         List<EmailAddress> emails = new ArrayList<>();
         emailRepository.findAll().forEach(emails::add);
 
+        System.out.println(emails.size());
         return emails;
     }
 
@@ -100,9 +101,13 @@ public class EmailService
         if(emailAddress.getAddress()==null || emailAddress.getAddress().equals("")) return false;
 
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        if(emailAddress.getGroup()==null)
-            emailAddress.setGroup("standard");
+        if(emailAddress.getGroupEmail()==null)
+            emailAddress.setGroupEmail("standard");
         return emailAddress.getAddress().matches(regex);
     }
 
+    public void deleteEmailAddressById(long id)
+    {
+        emailRepository.deleteById(id);
+    }
 }

@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.security.InvalidParameterException;
 import java.util.List;
 
@@ -48,6 +46,13 @@ public class EmailController
     public ResponseEntity<EmailAddress> sendEmail(@RequestBody Message message)
     {
             emailService.sendEmailToGroups(message);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/email/{id}")
+    public ResponseEntity<EmailAddress> deleteEmail(@PathVariable long id)
+    {
+        emailService.deleteEmailAddressById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

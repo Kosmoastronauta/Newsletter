@@ -44,12 +44,4 @@ public class EmailAddress
     public void setAddress(String address) {
         this.address = address;
     }
-
-    public String getGroup() {
-        return groupEmail;
-    }
-
-    public void setGroup(String groupEmail) {
-        this.groupEmail = groupEmail;
-    }
 }
