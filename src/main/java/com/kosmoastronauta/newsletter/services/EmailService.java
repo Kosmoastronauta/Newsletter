@@ -8,6 +8,10 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +76,8 @@ public class EmailService
         try
         {
             Properties properties = new Properties();
+            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
+            properties.load(input);
             String mailFrom = properties.getProperty("spring.mail.username");
             System.out.println("Sending to: " + emailAddress.getAddress());
             SimpleMailMessage mail = new SimpleMailMessage();
@@ -85,7 +91,11 @@ public class EmailService
 
         }catch(MailException e)
         {
-            throw new InvalidParameterException("Invalid address!!");
+            System.out.println("Invalid address!!!");
+        }
+        catch(IOException e)
+        {
+            throw new NoSuchElementException("There is no mailFrom data !!!");
         }
     }
 
@@ -104,8 +114,11 @@ public class EmailService
         if(emailAddress.getAddress()==null || emailAddress.getAddress().equals("")) return false;
 
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        if(emailAddress.getGroupEmail()==null)
+        if(emailAddress.getGroupEmail()==null || emailAddress.getGroupEmail().equals(""))
+        {
             emailAddress.setGroupEmail("standard");
+        }
+
         return emailAddress.getAddress().matches(regex);
     }
 

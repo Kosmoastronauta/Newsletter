@@ -7,8 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.sound.midi.SoundbankResource;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 public class EmailController
@@ -18,7 +23,7 @@ public class EmailController
     EmailService emailService;
 
     @GetMapping(path = "/emails/")
-    public ResponseEntity<List<EmailAddress>> getBooks()
+    public ResponseEntity<List<EmailAddress>> getBooks() throws Exception
     {
         List<EmailAddress> emails = emailService.getAllEmails();
         if(emails.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
