@@ -12,6 +12,12 @@ public class EmailGroup
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    public EmailGroup(){}
+
+    public EmailGroup(String name) {
+        this.name = name;
+    }
+
     private String name;
 
     public String getName() {
