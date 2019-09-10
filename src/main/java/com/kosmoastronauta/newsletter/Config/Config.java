@@ -7,8 +7,8 @@ import org.springframework.context.annotation.PropertySources;
 
 @Configuration
 @PropertySources( {@PropertySource("file:/home/mateusz/PropertiesFile/application.properties"),
-        @PropertySource("file:/home/mateusz/PropertiesFile/application-dev.properties"),
-        @PropertySource("file:/home/mateusz/PropertiesFile/application-test.properties")})
+        @PropertySource("file:/home/mateusz/PropertiesFile/application-dev.properties")})
+       // @PropertySource("file:/home/mateusz/PropertiesFile/application-test.properties")})
 class DefaultConfiguration {}
 
 @Configuration

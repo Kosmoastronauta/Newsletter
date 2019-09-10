@@ -5,6 +5,7 @@ import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sound.midi.SoundbankResource;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +18,18 @@ public class EmailGroupService
 
     public void addGroup(EmailGroup emailGroup)
     {
-        if(groupNameValidation(emailGroup.getName())) throw new InvalidParameterException("group name can't be empty");
+        if(!groupNameValidation(emailGroup.getName()))
+            throw new InvalidParameterException("group name can't be empty");
+
+        System.out.println(emailGroup.getName());
         emailGroupRepository.save(emailGroup);
+
     }
 
     private boolean groupNameValidation(String name)
     {
-        return name != null && !name.equals("");
+       if(name==null || name.equals("")) return false;
+        return true;
     }
 
     public List<EmailGroup> getAllGroups() throws NoSuchFieldException

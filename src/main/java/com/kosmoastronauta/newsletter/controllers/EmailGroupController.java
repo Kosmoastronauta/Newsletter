@@ -27,7 +27,7 @@ public class EmailGroupController
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<EmailGroup>(emailGroup, HttpStatus.OK);
+        return new ResponseEntity<>(emailGroup, HttpStatus.OK);
     }
 
     @GetMapping(path = "/groups/")
