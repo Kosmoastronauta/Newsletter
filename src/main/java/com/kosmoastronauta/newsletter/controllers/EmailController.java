@@ -47,19 +47,7 @@ public class EmailController
     @PostMapping(path = "/send/", consumes = "application/json")
     public ResponseEntity<EmailAddress> sendEmail(@RequestBody Message message)
     {
-//        try
-//        {
-//            emailService.sendEmail(emailAddress);
-//        }catch(MailException e)
-//        {
-//            System.out.println("Something wrong while sending " + e.getMessage());
-//
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//        catch(InvalidParameterException e )
-//        {
-//            System.out.println("Invalid email address");
-//        }
+            emailService.sendEmailToGroup(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

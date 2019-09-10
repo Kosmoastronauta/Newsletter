@@ -33,25 +33,32 @@ public class EmailService
         return emails;
     }
 
-    public void sendEmailByGroup(Message message)
+    public void sendEmailToGroup(Message message)
     {
+        String subject;
+        String body;
+        subject = message.getSubject();
+        body = message.getBody();
         List<EmailAddress> emailAddresses;
         for(int i = 0; i < message.getGroups().size(); i++)
         {
             emailAddresses = emailRepository.getEmailAddressesByGroupEmailEquals(message.getGroups().get(i));
             for(int j = 0; j < emailAddresses.size(); j++)
             {
-
+                try
+                {
+                    sendEmail(emailAddresses.get(i),subject,body);
+                }catch(MailException e)
+                {
+                    System.out.println("Error: Mail to: +" + emailAddresses.get(i).getAddress() + " wasn't sent !");
+                }
             }
         }
-
-
-
     }
 
-    public void sendEmail(EmailAddress emailAddress) throws MailException
+    public void sendEmail(EmailAddress emailAddress,String subject, String body ) throws MailException
     {
-        if(emailValidation(emailAddress))
+        try
         {
             SimpleMailMessage mail = new SimpleMailMessage();
             mail.setTo(emailAddress.getAddress());
@@ -59,8 +66,10 @@ public class EmailService
             mail.setSubject("Testing Newsletter");
             mail.setText("Ja nie dam rady?");
             javaMailSender.send(mail);
+        }catch(MailException e)
+        {
+            throw new InvalidParameterException("Invalid address!!");
         }
-        else throw new InvalidParameterException("Invalid address!!");
     }
 
     public void addEmail(EmailAddress emailAddress)
