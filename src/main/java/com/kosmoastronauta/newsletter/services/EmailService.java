@@ -8,7 +8,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -99,7 +98,7 @@ public class EmailService
 
     public void addEmail(EmailAddress emailAddress)
     {
-        if(emailValidation(emailAddress))
+        if(emailValidation(emailAddress.getAddress()))
         {
             emailAddress.setActive(true);
             emailRepository.save(emailAddress);
@@ -107,17 +106,15 @@ public class EmailService
         else throw new InvalidParameterException("Email address is invalid");
     }
 
-    private static boolean emailValidation(EmailAddress emailAddress)
+    private static boolean emailValidation(String address)
     {
-        if(emailAddress.getAddress()==null || emailAddress.getAddress().equals("")) return false;
-
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        if(emailAddress.getGroupEmail()==null || emailAddress.getGroupEmail().equals(""))
+        if(address==null || address.equals(""))
         {
-            emailAddress.setGroupEmail("standard");
+            return false;
         }
 
-        return emailAddress.getAddress().matches(regex);
+        return address.matches(regex);
     }
 
     public void deleteEmailAddressById(long id)
