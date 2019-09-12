@@ -10,15 +10,15 @@ public class EmailAddress
     private long id;
 
     private String address;
-    private String groupEmail;
+    private int groupId;
     private boolean active;
 
-    public String getGroupEmail() {
-        return groupEmail;
+    public int getGroupEmail() {
+        return groupId;
     }
 
-    public void setGroupEmail(String groupEmail) {
-        this.groupEmail = groupEmail;
+    public void setGroupEmail(int groupId) {
+        this.groupId = groupId;
     }
 
     public boolean isActive() {

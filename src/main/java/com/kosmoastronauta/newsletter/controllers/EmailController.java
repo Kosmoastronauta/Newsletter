@@ -39,10 +39,11 @@ public class EmailController
         return new ResponseEntity<>(emailAddress, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/send/groups/", consumes = "application/json")
     public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody Message message)
     {
-        emailService.sendEmailToGroups(message);
+       // emailService.sendEmailToGroups(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
