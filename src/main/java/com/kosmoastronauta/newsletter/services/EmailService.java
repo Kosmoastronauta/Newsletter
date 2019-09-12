@@ -50,10 +50,10 @@ public class EmailService
         }
     }
 
-    public void sendEmailToGroup(String group, String subject, String content) throws NoSuchElementException
+    public void sendEmailToGroup(int groupId, String subject, String content) throws NoSuchElementException
     {
         List<EmailAddress> emailAddresses;
-        emailAddresses = emailRepository.getEmailAddressesByGroupEmailEquals(group);
+        emailAddresses = emailRepository.getEmailAddressesByGroupIdEquals(groupId);
 
         if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group named: " + group);
 
@@ -65,7 +65,7 @@ public class EmailService
                 sendEmail(emailAddresses.get(i),subject,content);
             }catch(MailException e)
             {
-                logger.info("Error: Mail to: +" + emailAddresses.get(i).getAddress() + " wasn't sent !");
+                logger.info("Error: Mail to: +" + emailAddresses.get(i).getGroupId() + " wasn't sent !");
             }
         }
     }

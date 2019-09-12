@@ -13,11 +13,11 @@ public class EmailAddress
     private int groupId;
     private boolean active;
 
-    public int getGroupEmail() {
+    public int getGroupId() {
         return groupId;
     }
 
-    public void setGroupEmail(int groupId) {
+    public void setGroupId(int groupId) {
         this.groupId = groupId;
     }
 
