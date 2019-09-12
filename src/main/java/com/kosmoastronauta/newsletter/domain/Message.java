@@ -6,9 +6,9 @@ public class Message
 {
     private String subject;
     private String body;
-    private List<String> groups;
+    private List<Integer> groups;
 
-    public List<String> getGroups() {
+    public List<Integer> getGroups() {
         return groups;
     }
 
@@ -16,7 +16,7 @@ public class Message
         return subject;
     }
 
-    public void setGroups(List<String> groups) {
+    public void setGroups(List<Integer> groups) {
         this.groups = groups;
     }
 
