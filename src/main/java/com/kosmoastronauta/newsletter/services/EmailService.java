@@ -55,7 +55,7 @@ public class EmailService
         List<EmailAddress> emailAddresses;
         emailAddresses = emailRepository.getEmailAddressesByGroupIdEquals(groupId);
 
-        if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group named: " + group);
+        if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group ID: " + groupId);
 
         for(int i = 0; i < emailAddresses.size(); i++)
 

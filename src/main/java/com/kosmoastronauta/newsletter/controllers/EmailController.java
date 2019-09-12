@@ -43,7 +43,7 @@ public class EmailController
     @PostMapping(path = "/send/groups/", consumes = "application/json")
     public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody Message message)
     {
-       // emailService.sendEmailToGroups(message);
+        emailService.sendEmailToGroups(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
