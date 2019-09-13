@@ -32,35 +32,42 @@ public class EmailService
     {
         if(emailValidation(emailAddress.getAddress()))
         {
+            emailAddress.setGroupId(1);
             emailAddress.setActive(true);
+            try
+            {
+                KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+                kpg.initialize(512);
+                KeyPair keyPair = kpg.generateKeyPair();
+                PublicKey publicKey = keyPair.getPublic();
+                String keyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+
+                emailAddress.setPubKey(removeSlashes(keyString));
+                logger.info(emailAddress.getPubKey());
+            }
+            catch(NoSuchAlgorithmException e)
+            {
+                logger.info("Invalid hash method");
+            }
             emailRepository.save(emailAddress);
+
         }
         else throw new InvalidParameterException("Email address is invalid");
 
-        emailAddress.setGroupId(1);
 
-        try
-        {
-            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(2048);
-            KeyPair keyPair = kpg.generateKeyPair();
-            PublicKey publicKey = keyPair.getPublic();
-            emailAddress.setPubKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()));
-        }
-        catch(NoSuchAlgorithmException e)
-        {
-            logger.info("Invalid hash method");
-        }
 
     }
 
-    private boolean unsubscribe(String address, String gettedPublicKey)
+    public boolean unsubscribe(String address, String gettedPublicKey)
     {
             EmailAddress emailAddress = emailRepository.getEmailAddressesByPubKeyEquals(gettedPublicKey);
 
+            if(!address.equals(emailAddress.getAddress())) throw new InvalidParameterException(); // if key is ok but
+        // for another address
             if(verifyKeys(emailAddress, gettedPublicKey))
             {
                 emailAddress.setActive(false);
+                emailRepository.save(emailAddress);
                 return true;
             }
         return false;
@@ -87,6 +94,19 @@ public class EmailService
     public void deleteEmailAddressById(long id)
     {
         emailRepository.deleteById(id);
+    }
+
+    public String removeSlashes(String word)
+    {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < word.length(); i++)
+        {
+            if(word.charAt(i)!='/')
+            {
+                sb.append(word.charAt(i));
+            }
+        }
+        return sb.toString();
     }
 
 }

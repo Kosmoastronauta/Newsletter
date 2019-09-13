@@ -38,6 +38,20 @@ public class EmailController
         return new ResponseEntity<>(emailAddress, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/unsubscribe/{address}/{key}")
+    public ResponseEntity<EmailAddress> unsubscribe(@PathVariable String address, @PathVariable String key)
+    {
+        try
+        {
+            if(emailService.unsubscribe(address,key)) return new ResponseEntity<>(HttpStatus.OK);
+            else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }catch(InvalidParameterException e)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @DeleteMapping(path = "/email/{id}")
     public ResponseEntity<EmailAddress> deleteEmail(@PathVariable long id)
     {

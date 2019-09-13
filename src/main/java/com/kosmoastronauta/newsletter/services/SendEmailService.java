@@ -79,7 +79,9 @@ public class SendEmailService
         //    mail.setRecipient(Message.RecipientType.TO,new InternetAddress(emailAddress.getAddress(),false));
             helper.setFrom(mailFrom);
             helper.setSubject(subject);
-            helper.setText(content + "<p>Your email is: "+ emailAddress.getAddress()+" Thank You for joining us.</p>",
+            helper.setText(content + "</br> <p>Sent To: "+ emailAddress.getAddress() + ".</p>"+
+                    "<a href=http://localhost:8181/unsubscribe/"+emailAddress.getAddress()+"/"+emailAddress.getPubKey()+
+                            ">Unsubscribe</a>",
                     true);
 
             if(emailAddress.isActive())
