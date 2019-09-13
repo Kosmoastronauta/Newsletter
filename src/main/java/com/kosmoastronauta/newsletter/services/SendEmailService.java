@@ -8,7 +8,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +49,6 @@ public class SendEmailService
         if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group ID: " + groupId);
 
         for(int i = 0; i < emailAddresses.size(); i++)
-
         {
             try
             {

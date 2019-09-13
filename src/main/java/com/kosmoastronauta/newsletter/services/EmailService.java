@@ -1,21 +1,12 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
-import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 @Service
@@ -32,8 +23,6 @@ public class EmailService
 
         return emails;
     }
-
-
 
     public void addEmail(EmailAddress emailAddress)
     {
@@ -60,6 +49,5 @@ public class EmailService
     {
         emailRepository.deleteById(id);
     }
-
 
 }

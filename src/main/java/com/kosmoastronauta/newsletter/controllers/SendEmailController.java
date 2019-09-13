@@ -21,7 +21,7 @@ public class SendEmailController
     @PostMapping(path = "/send/groups/", consumes = "application/json")
     public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody Message message)
     {
-        sendEmailService.sendEmailToGroups(message);
+       // sendEmailService.sendEmailToGroups(message);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
