@@ -1,6 +1,7 @@
 package com.kosmoastronauta.newsletter.domain;
 
 import javax.persistence.*;
+import java.security.Key;
 
 @Entity
 public class EmailAddress
@@ -12,6 +13,24 @@ public class EmailAddress
     private String address;
     private int groupId;
     private boolean active;
+    private Key pubKey;
+    private Key privKey;
+
+    public Key getPrivKey() {
+        return privKey;
+    }
+
+    public void setPrivKey(Key privKey) {
+        this.privKey = privKey;
+    }
+
+    public Key getPubKey() {
+        return pubKey;
+    }
+
+    public void setPubKey(Key pubKey) {
+        this.pubKey = pubKey;
+    }
 
     public int getGroupId() {
         return groupId;

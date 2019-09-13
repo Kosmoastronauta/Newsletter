@@ -1,7 +1,6 @@
 package com.kosmoastronauta.newsletter.controllers;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
-import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,8 +37,6 @@ public class EmailController
         }
         return new ResponseEntity<>(emailAddress, HttpStatus.OK);
     }
-
-
 
     @DeleteMapping(path = "/email/{id}")
     public ResponseEntity<EmailAddress> deleteEmail(@PathVariable long id)

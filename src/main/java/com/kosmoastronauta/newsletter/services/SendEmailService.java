@@ -1,13 +1,16 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
-import com.kosmoastronauta.newsletter.domain.Message;
+import com.kosmoastronauta.newsletter.domain.MesssageContent;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.MimeMessage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +30,7 @@ public class SendEmailService
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
-    public void sendEmailToGroups(Message message)
+    public void sendEmailToGroups(MesssageContent message)
     {
         for(int i = 0; i < message.getGroups().size(); i++)
         {
@@ -60,7 +63,7 @@ public class SendEmailService
         }
     }
 
-    public void sendEmail(EmailAddress emailAddress,String subject, String body ) throws MailException
+    public void sendEmail(EmailAddress emailAddress,String subject, String content ) throws MailException
     {
         try
         {
@@ -68,11 +71,16 @@ public class SendEmailService
             InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
             properties.load(input);
             String mailFrom = properties.getProperty("spring.mail.username");
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(emailAddress.getAddress());
-            mail.setFrom(mailFrom);
-            mail.setSubject(subject);
-            mail.setText(body);
+           // SimpleMailMessage mail = new SimpleMailMessage();
+            MimeMessage mail = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mail);
+
+            helper.setTo(emailAddress.getAddress());
+        //    mail.setRecipient(Message.RecipientType.TO,new InternetAddress(emailAddress.getAddress(),false));
+            helper.setFrom(mailFrom);
+            helper.setSubject(subject);
+            helper.setText(content + "<p>Your email is: "+ emailAddress.getAddress()+" Thank You for joining us.</p>",
+                    true);
 
             if(emailAddress.isActive())
                 javaMailSender.send(mail);
@@ -85,9 +93,17 @@ public class SendEmailService
         {
             throw new NoSuchElementException("There is no mailFrom data !!!");
         }
+        catch(AddressException e)
+        {
+
+        }
+        catch(MessagingException e)
+        {
+
+        }
     }
 
-    public void sendEmailToAll(Message message)
+    public void sendEmailToAll(MesssageContent message)
     {
         List<EmailAddress> emailAddresses = emailRepository.getEmailAddressesByActiveIsTrue();
 

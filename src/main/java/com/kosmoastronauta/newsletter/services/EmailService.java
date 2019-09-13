@@ -5,6 +5,9 @@ import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -32,6 +35,23 @@ public class EmailService
             emailRepository.save(emailAddress);
         }
         else throw new InvalidParameterException("Email address is invalid");
+
+        emailAddress.setGroupId(1);
+
+        try
+        {
+            KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
+            kpg.initialize(1024);
+            KeyPair keyPair = kpg.generateKeyPair();
+            emailAddress.setPubKey(keyPair.getPublic());
+            emailAddress.setPrivKey(keyPair.getPrivate());
+        }
+        catch(NoSuchAlgorithmException e)
+        {
+            logger.info("Invalid hash method");
+        }
+
+
     }
 
     private static boolean emailValidation(String address)
