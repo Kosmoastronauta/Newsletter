@@ -16,7 +16,7 @@ public class EmailGroupController
     EmailGroupService emailGroupService;
 
 //    @CrossOrigin(origins = "http://localhost:4200")
-    @PostMapping(path = "/groups/")
+    @PostMapping(path = "/createGroup/")
     public ResponseEntity<EmailGroup> addGroup(@RequestBody EmailGroup emailGroup)
     {
         try
@@ -30,7 +30,7 @@ public class EmailGroupController
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
-    @GetMapping(path = "/groups/")
+    @GetMapping(path = "/allGroups/")
     public ResponseEntity<List<EmailGroup>> getAllGroups()
     {
         List<EmailGroup> groups;

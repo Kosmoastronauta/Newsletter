@@ -25,7 +25,7 @@ public class SendEmailController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(path = "/send/all/", consumes = "application/json")
+    @PostMapping(path = "/sendToAll/", consumes = "application/json")
     public ResponseEntity<EmailAddress> sendEmailToAll(@RequestBody Message message)
     {
         sendEmailService.sendEmailToAll(message);
