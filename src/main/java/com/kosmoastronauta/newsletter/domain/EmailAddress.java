@@ -10,7 +10,24 @@ public class EmailAddress
     private long id;
 
     private String address;
-    private String groupEmail;
+    private int groupId;
+    private boolean active;
+
+    public int getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public long getId() {
         return id;
@@ -26,13 +43,5 @@ public class EmailAddress
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getGroup() {
-        return groupEmail;
-    }
-
-    public void setGroup(String groupEmail) {
-        this.groupEmail = groupEmail;
     }
 }
