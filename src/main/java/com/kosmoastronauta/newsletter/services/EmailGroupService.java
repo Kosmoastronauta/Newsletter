@@ -21,7 +21,6 @@ public class EmailGroupService
         if(!groupNameValidation(emailGroup.getName()))
             throw new InvalidParameterException("group name can't be empty");
 
-        System.out.println(emailGroup.getName());
         emailGroupRepository.save(emailGroup);
 
     }
