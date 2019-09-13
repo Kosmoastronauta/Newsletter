@@ -41,10 +41,10 @@ public class EmailService
         try
         {
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-            kpg.initialize(1024);
+            kpg.initialize(2048);
             KeyPair keyPair = kpg.generateKeyPair();
-            emailAddress.setPubKey(keyPair.getPublic());
-            emailAddress.setPrivKey(keyPair.getPrivate());
+            emailAddress.setPubKey(keyPair.getPublic().getFormat());
+            emailAddress.setPrivKey(keyPair.getPrivate().getFormat());
         }
         catch(NoSuchAlgorithmException e)
         {

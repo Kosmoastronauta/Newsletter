@@ -13,22 +13,23 @@ public class EmailAddress
     private String address;
     private int groupId;
     private boolean active;
-    private Key pubKey;
-    private Key privKey;
+    private String pubKey;
+    private String privKey;
 
-    public Key getPrivKey() {
+
+    public String getPrivKey() {
         return privKey;
     }
 
-    public void setPrivKey(Key privKey) {
+    public void setPrivKey(String privKey) {
         this.privKey = privKey;
     }
 
-    public Key getPubKey() {
+    public String getPubKey() {
         return pubKey;
     }
 
-    public void setPubKey(Key pubKey) {
+    public void setPubKey(String pubKey) {
         this.pubKey = pubKey;
     }
 
