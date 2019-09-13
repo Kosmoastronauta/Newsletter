@@ -14,16 +14,6 @@ public class EmailAddress
     private int groupId;
     private boolean active;
     private String pubKey;
-    private String privKey;
-
-
-    public String getPrivKey() {
-        return privKey;
-    }
-
-    public void setPrivKey(String privKey) {
-        this.privKey = privKey;
-    }
 
     public String getPubKey() {
         return pubKey;

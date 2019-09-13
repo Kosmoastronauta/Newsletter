@@ -4,11 +4,12 @@ import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.security.InvalidParameterException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,15 +44,26 @@ public class EmailService
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
             kpg.initialize(2048);
             KeyPair keyPair = kpg.generateKeyPair();
-            emailAddress.setPubKey(keyPair.getPublic().getFormat());
-            emailAddress.setPrivKey(keyPair.getPrivate().getFormat());
+            PublicKey publicKey = keyPair.getPublic();
+            emailAddress.setPubKey(Base64.getEncoder().encodeToString(publicKey.getEncoded()));
         }
         catch(NoSuchAlgorithmException e)
         {
             logger.info("Invalid hash method");
         }
 
+    }
 
+    private boolean unsubscribe(String address, String gettedPublicKey)
+    {
+            EmailAddress emailAddress = emailRepository.getEmailAddressesByPubKeyEquals(gettedPublicKey);
+
+            if(verifyKeys(emailAddress, gettedPublicKey))
+            {
+                emailAddress.setActive(false);
+                return true;
+            }
+        return false;
     }
 
     private static boolean emailValidation(String address)
@@ -63,6 +75,13 @@ public class EmailService
         }
 
         return address.matches(regex);
+    }
+
+    private boolean verifyKeys(EmailAddress emailAddress, String gettedPublicKey)
+    {
+        String publicKey = emailAddress.getPubKey();
+        if(gettedPublicKey.equals(publicKey)) return true;
+        else return false;
     }
 
     public void deleteEmailAddressById(long id)

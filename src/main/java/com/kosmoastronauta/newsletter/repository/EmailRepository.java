@@ -11,4 +11,6 @@ public interface EmailRepository extends CrudRepository<EmailAddress, Long>
      List<EmailAddress> getEmailAddressesByActiveIsTrue();
 
      List<EmailAddress> getEmailAddressesByGroupIdEquals(int groupId);
+
+     EmailAddress getEmailAddressesByPubKeyEquals(String pubKey);
 }
