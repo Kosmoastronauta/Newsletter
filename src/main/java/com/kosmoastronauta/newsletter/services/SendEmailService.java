@@ -35,6 +35,7 @@ public class SendEmailService
 
     private List<EmailAddress> getListOfUniqueEmailAddressesByGroups(List<Integer> idsOfGroups)
     {
+
         int currentGroup;
         Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
@@ -47,10 +48,10 @@ public class SendEmailService
 
             for(int j = 0; j < addressesInOneGroup.size();  j++)
             {
-                tempEmailAddress= emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(i).getId());
-                if(tempEmailAddress!=null)
+                currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(j).getEmailId());
+
+                if(currentEmailAddress!=null)
                 {
-                    currentEmailAddress = tempEmailAddress;
                     currentEmailAddress.setGroupId(idsOfGroups.get(i));
                     allAddressesSet.add(currentEmailAddress);
                 }
@@ -62,14 +63,16 @@ public class SendEmailService
     public void sendEmailToGroups(MesssageContent message)
     {
         List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
+
         //sending
         sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getBody());
     }
 
-    public void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
+    private void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
     {
         for(EmailAddress emailAddress : emailAddresses)
         {
+            System.out.println(emailAddress.getAddress());
             sendEmail(emailAddress, subject, content);
         }
     }
@@ -90,11 +93,11 @@ public class SendEmailService
             helper.setFrom(mailFrom);
             helper.setSubject(subject);
             helper.setText(content + "</br> <p>Sent To: "+ emailAddress.getAddress() + ".</p>"+
-                    "<a href=http://localhost:8181/unsubscribe/"+emailAddress.getAddress()+"/"+emailAddress.getPubKey()+
+                    "<a href=http://localhost:8181/unsubscribe/"+emailAddress.getAddress()+"/" +emailAddress.getGroupId() + "/"+emailAddress +
+                            ".getPubKey()" +
                             ">Unsubscribe</a>",
                     true);
 
-            if(emailAddress.isActive())
                 javaMailSender.send(mail);
 
         }catch(MailException e)
@@ -107,11 +110,11 @@ public class SendEmailService
         }
         catch(AddressException e)
         {
-
+            logger.info(e.getMessage());
         }
         catch(MessagingException e)
         {
-
+            logger.info(e.getMessage());
         }
     }
 
