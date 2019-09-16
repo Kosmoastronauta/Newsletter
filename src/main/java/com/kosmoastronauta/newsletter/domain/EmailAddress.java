@@ -1,7 +1,6 @@
 package com.kosmoastronauta.newsletter.domain;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class EmailAddress

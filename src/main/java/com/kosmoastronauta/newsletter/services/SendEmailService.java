@@ -1,8 +1,10 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
+import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.domain.MesssageContent;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
+import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -26,36 +28,36 @@ public class SendEmailService
     @Autowired
     EmailRepository emailRepository;
 
+    @Autowired
+    EmailToGroupRepository emailToGroupRepository;
+
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
     public void sendEmailToGroups(MesssageContent message)
     {
-        Set<EmailAddress> allAddresses;
-        List<EmailAddress> addressesInOneGroup;
+        int currentGroup;
+        Set<EmailAddress> allAddresses = new HashSet<>();
+        List<EmailToGroup> addressesInOneGroup;
+        EmailAddress currentEmailAddress;
         for(int i = 0; i < message.getGroups().size(); i++)
         {
-            addressesInOneGroup =
-            for(int j = 0; )
-            {
+            currentGroup = message.getGroups().get(i);
+            addressesInOneGroup = emailToGroupRepository.getEmailToGroupByGroupIdEqualsAndActiveTrue(currentGroup);
 
+            for(int j = 0; j < addressesInOneGroup.size();  j++)
+            {
+                currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(i).getId());
+                allAddresses.add(currentEmailAddress);
             }
         }
 
+        List<EmailAddress> allEmailAddressesList = new ArrayList<>(allAddresses);
 
-//        Set<EmailAddress> emailAddressesSet = new HashSet<>();
-//        List<EmailAddress> emailsInOneGroup;
-//        for(int i = 0; i < message.getGroups().size(); i++) // for each group in query
-//        {
-//            emailsInOneGroup = emailRepository.getEmailAddressesByGroupsContains(message.getGroups().get(i)); // get all
-//            // addresses from that group
-//
-//            emailAddressesSet.addAll(emailsInOneGroup);
-//        }
-//
-//        EmailAddress[] addresses;
-//        addresses = emailAddressesSet.stream().toArray(n -> new EmailAddress[n]);
-//      //  logger.info("First email: " + addresses[0]);
-//        sendToArrayOfEmails(addresses,message.getSubject(),message.getBody());
+        //sending
+        for(EmailAddress emailAddress : allEmailAddressesList)
+        {
+            sendEmail(emailAddress, message.getSubject(), message.getBody());
+        }
 
     }
 
