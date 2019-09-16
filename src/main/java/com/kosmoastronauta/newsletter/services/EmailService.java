@@ -58,7 +58,7 @@ public class EmailService
 
     }
 
-    public boolean unsubscribe(String address, String gettedPublicKey)
+    public boolean unsubscribe(String address, long groupId, String gettedPublicKey)
     {
         EmailAddress emailAddress = emailRepository.getEmailAddressesByPubKeyEquals(gettedPublicKey);
 
@@ -66,8 +66,11 @@ public class EmailService
         // for another address
         if(verifyKeys(emailAddress, gettedPublicKey))
         {
-            emailAddress.setActive(false);
+            EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailIdEqualsAndGroupIdEquals(emailAddress.getId(), groupId);
+            emailToGroup.setActive(true);
+            emailToGroupRepository.save(emailToGroup);
             emailRepository.save(emailAddress);
+
             return true;
         }
         return false;

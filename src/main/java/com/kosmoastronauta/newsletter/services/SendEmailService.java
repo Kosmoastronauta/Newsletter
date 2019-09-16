@@ -50,8 +50,7 @@ public class SendEmailService
                 allAddressesSet.add(currentEmailAddress);
             }
         }
-        List<EmailAddress> allAddressesList = new ArrayList<>(allAddressesSet);
-        return allAddressesList;
+        return new ArrayList<>(allAddressesSet);
     }
 
     public void sendEmailToGroups(MesssageContent message)

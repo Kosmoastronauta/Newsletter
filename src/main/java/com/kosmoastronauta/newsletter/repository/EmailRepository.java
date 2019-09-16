@@ -10,8 +10,6 @@ public interface EmailRepository extends CrudRepository<EmailAddress, Long>
 {
      List<EmailAddress> getEmailAddressesByActiveIsTrue();
 
-     List<EmailAddress> getEmailAddressesByGroupsContains(long groupId);
-
      EmailAddress getEmailAddressesByIdEquals(long id);
 
      EmailAddress getEmailAddressesByPubKeyEquals(String pubKey);
