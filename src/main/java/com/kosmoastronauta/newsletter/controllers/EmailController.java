@@ -50,7 +50,6 @@ public class EmailController
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @DeleteMapping(path = "/email/{id}")

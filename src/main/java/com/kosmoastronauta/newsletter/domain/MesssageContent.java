@@ -5,7 +5,7 @@ import java.util.List;
 public class MesssageContent
 {
     private String subject;
-    private String body;
+    private String content;
     private List<Integer> groups;
 
     public List<Integer> getGroups() {
@@ -25,10 +25,10 @@ public class MesssageContent
     }
 
     public String getBody() {
-        return body;
+        return content;
     }
 
     public void setBody(String body) {
-        this.body = body;
+        this.content = body;
     }
 }
