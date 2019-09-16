@@ -16,6 +16,15 @@ public class EmailToGroup
     private long groupId;
     private boolean active;
 
+    public EmailToGroup() {}
+
+    public EmailToGroup(long emailId, long groupId)
+    {
+        this.emailId = emailId;
+        this.groupId = groupId;
+        this.active = true;
+    }
+
     public boolean isActive() {
         return active;
     }

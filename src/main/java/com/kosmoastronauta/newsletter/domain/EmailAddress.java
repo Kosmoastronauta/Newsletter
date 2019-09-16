@@ -11,17 +11,16 @@ public class EmailAddress
     private long id;
 
     private String address;
-    @ElementCollection(targetClass=Integer.class)
-    private Set<Integer> groups;
+    private int groupId;
     private boolean active;
     private String pubKey;
 
-    public Set<Integer> getGroups() {
-        return groups;
+    public int getGroupId() {
+        return groupId;
     }
 
-    public void setGroups(Set<Integer> groups) {
-        this.groups = groups;
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
     }
 
     public String getPubKey() {

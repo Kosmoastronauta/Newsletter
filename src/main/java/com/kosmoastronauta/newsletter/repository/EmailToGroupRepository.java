@@ -4,4 +4,6 @@ import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import org.springframework.data.repository.CrudRepository;
 
 public interface EmailToGroupRepository extends CrudRepository<EmailToGroup,Long>
-{}
+{
+    EmailToGroup getEmailToGroupByEmailIdEqualsAndGroupIdEquals(long emailID, long groupId);
+}

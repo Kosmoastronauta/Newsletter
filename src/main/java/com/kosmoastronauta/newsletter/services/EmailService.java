@@ -15,7 +15,7 @@ public class EmailService
 {
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
     @Autowired
-   EmailRepository emailRepository;
+    EmailRepository emailRepository;
 
     @Autowired
     EmailToGroupRepository emailToGroupRepository;
@@ -47,8 +47,7 @@ public class EmailService
 
                 emailAddress.setPubKey(removeSlashes(keyString));
                 logger.info(emailAddress.getPubKey());
-            }
-            catch(NoSuchAlgorithmException e)
+            } catch(NoSuchAlgorithmException e)
             {
                 logger.info("Invalid hash method");
             }
@@ -61,23 +60,23 @@ public class EmailService
 
     public boolean unsubscribe(String address, String gettedPublicKey)
     {
-            EmailAddress emailAddress = emailRepository.getEmailAddressesByPubKeyEquals(gettedPublicKey);
+        EmailAddress emailAddress = emailRepository.getEmailAddressesByPubKeyEquals(gettedPublicKey);
 
-            if(!address.equals(emailAddress.getAddress())) throw new InvalidParameterException(); // if key is ok but
+        if(!address.equals(emailAddress.getAddress())) throw new InvalidParameterException(); // if key is ok but
         // for another address
-            if(verifyKeys(emailAddress, gettedPublicKey))
-            {
-                emailAddress.setActive(false);
-                emailRepository.save(emailAddress);
-                return true;
-            }
+        if(verifyKeys(emailAddress, gettedPublicKey))
+        {
+            emailAddress.setActive(false);
+            emailRepository.save(emailAddress);
+            return true;
+        }
         return false;
     }
 
     private static boolean emailValidation(String address)
     {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        if(address==null || address.equals(""))
+        if(address == null || address.equals(""))
         {
             return false;
         }
@@ -102,7 +101,7 @@ public class EmailService
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < word.length(); i++)
         {
-            if(word.charAt(i)!='/')
+            if(word.charAt(i) != '/')
             {
                 sb.append(word.charAt(i));
             }
@@ -110,4 +109,18 @@ public class EmailService
         return sb.toString();
     }
 
+    private void addEmailToGroup(EmailAddress emailAddress)
+    {
+        EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailIdEqualsAndGroupIdEquals(emailAddress.getId(), emailAddress.getGroupId());
+
+        if(emailToGroup == null)
+        {
+            emailToGroupRepository.save(new EmailToGroup(emailAddress.getId(), emailAddress.getGroupId()))
+        }
+        else
+        {
+            emailToGroup.setActive(true);
+            emailToGroupRepository.save(emailToGroup);
+        }
+    }
 }
