@@ -56,35 +56,9 @@ public class SendEmailService
 
     public void sendEmailToGroups(MesssageContent message)
     {
-
         List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
         sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getBody());
-    }
-
-    public void sendEmailToGroup(int groupId, String subject, String content) throws NoSuchElementException
-    {
-        List<EmailAddress> emailAddresses;
-        ////// Important here could not work
-        emailAddresses = emailRepository.getEmailAddressesByGroupsContains(groupId);
-        for(int i = 0; i < emailAddresses.size(); i++)
-        {
-            logger.info(emailAddresses.get(i).getGroups().toString());
-        }
-
-//        if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group ID: " + groupId);
-//
-//        for(int i = 0; i < emailAddresses.size(); i++)
-//        {
-//            try
-//            {
-//                sendEmail(emailAddresses.get(i),subject,content);
-//            }catch(MailException e)
-//            {
-//                logger.info("Error: Mail to group "  + " wasn't " +
-//                        "sent !");
-//            }
-//        }
     }
 
     public void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
