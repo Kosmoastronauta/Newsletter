@@ -30,20 +30,32 @@ public class SendEmailService
 
     public void sendEmailToGroups(MesssageContent message)
     {
-        Set<EmailAddress> emailAddressesSet = new HashSet<>();
-        List<EmailAddress> emailsInOneGroup;
-        for(int i = 0; i < message.getGroups().size(); i++) // for each group in query
+        Set<EmailAddress> allAddresses;
+        List<EmailAddress> addressesInOneGroup;
+        for(int i = 0; i < message.getGroups().size(); i++)
         {
-            emailsInOneGroup = emailRepository.getEmailAddressesByGroupsContains(message.getGroups().get(i)); // get all
-            // addresses from that group
+            addressesInOneGroup =
+            for(int j = 0; )
+            {
 
-            emailAddressesSet.addAll(emailsInOneGroup);
+            }
         }
 
-        EmailAddress[] addresses;
-        addresses = emailAddressesSet.stream().toArray(n -> new EmailAddress[n]);
-      //  logger.info("First email: " + addresses[0]);
-        sendToArrayOfEmails(addresses,message.getSubject(),message.getBody());
+
+//        Set<EmailAddress> emailAddressesSet = new HashSet<>();
+//        List<EmailAddress> emailsInOneGroup;
+//        for(int i = 0; i < message.getGroups().size(); i++) // for each group in query
+//        {
+//            emailsInOneGroup = emailRepository.getEmailAddressesByGroupsContains(message.getGroups().get(i)); // get all
+//            // addresses from that group
+//
+//            emailAddressesSet.addAll(emailsInOneGroup);
+//        }
+//
+//        EmailAddress[] addresses;
+//        addresses = emailAddressesSet.stream().toArray(n -> new EmailAddress[n]);
+//      //  logger.info("First email: " + addresses[0]);
+//        sendToArrayOfEmails(addresses,message.getSubject(),message.getBody());
 
     }
 
