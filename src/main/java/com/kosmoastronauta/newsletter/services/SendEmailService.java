@@ -11,10 +11,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -36,12 +35,10 @@ public class SendEmailService
 
     private List<EmailAddress> getListOfUniqueEmailAddressesByGroups(List<Integer> idsOfGroups)
     {
-
         int currentGroup;
         Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
         EmailAddress currentEmailAddress;
-        EmailAddress tempEmailAddress;
         for(int i = 0; i < idsOfGroups.size(); i++)
         {
             currentGroup = idsOfGroups.get(i);
@@ -63,10 +60,10 @@ public class SendEmailService
 
     public void sendEmailToGroups(MesssageContent message)
     {
-        List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
 
+        List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
-        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getBody());
+        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getContent());
     }
 
     private void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
@@ -82,57 +79,61 @@ public class SendEmailService
     {
         try
         {
-            Properties properties = new Properties();
-            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
-            properties.load(input);
-            String mailFrom = properties.getProperty("spring.mail.username");
-            MimeMessage mail = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mail);
-
-            helper.setTo(emailAddress.getAddress());
-        //    mail.setRecipient(Message.RecipientType.TO,new InternetAddress(emailAddress.getAddress(),false));
-            helper.setFrom(mailFrom);
-            helper.setSubject(subject);
-            helper.setText(content + "</br> <p>Sent To: "+ emailAddress.getAddress() + ".</p>"+
-                    "<a href=http://localhost:8181/unsubscribe/"+emailAddress.getAddress()+"/" +emailAddress.getGroupId() + "/"+emailAddress +
-                            ".getPubKey()" +
-                            ">Unsubscribe</a>",
-                    true);
-
-                javaMailSender.send(mail);
+            MimeMessage mail = prepareData(emailAddress, subject, content);
+            javaMailSender.send(mail);
 
         }catch(MailException e)
         {
             logger.info("Invalid address");
         }
+    }
+
+    private MimeMessage prepareData(EmailAddress emailAddress,String subject, String content )
+    {
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        Properties properties = new Properties();
+        try
+        {
+            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
+            properties.load(input);
+
+        }catch(FileNotFoundException e)
+        {
+            logger.info(e.getMessage());
+        }
         catch(IOException e)
         {
-            throw new NoSuchElementException("There is no mailFrom data !!!");
+            logger.info(e.getMessage());
         }
-        catch(AddressException e)
+        try
+        {
+            String mailFrom = properties.getProperty("spring.mail.username");
+
+            MimeMessageHelper helper = new MimeMessageHelper(mail);
+            helper.setTo(emailAddress.getAddress());
+            helper.setFrom(mailFrom);
+            helper.setSubject(subject);
+            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=http://localhost:8181/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() + "/" + emailAddress + ".getPubKey()" + ">Unsubscribe</a>", true);
+        }catch(MessagingException e)
         {
             logger.info(e.getMessage());
         }
-        catch(MessagingException e)
-        {
-            logger.info(e.getMessage());
-        }
+        return mail;
     }
 
     public void sendEmailToAll(MesssageContent message)
     {
-        List<EmailToGroup> emailToGroups = emailToGroupRepository.getDistinctByEmailIdAndActiveTrue();
-        List<EmailAddress> emailAddresses = new ArrayList<>();
-        for(int i = 0; i <emailToGroups.size() ; i++)
-        {
-            emailAddresses.add(emailRepository.getEmailAddressesByIdEquals(emailToGroups.get(i).getEmailId()));
-        }
+        List<EmailAddress> emails = new ArrayList<>();
+        emailRepository.findAll().forEach(emails::add);
+        List<EmailAddress> emailsToSend = new ArrayList<>();
 
-        String subject = message.getSubject();
-        String body = message.getBody();
-        for(EmailAddress emailAddress : emailAddresses)
+        for(EmailAddress email : emails)
         {
-            sendEmail(emailAddress, subject, body);
+            if(emailToGroupRepository.existsEmailToGroupByEmailIdEqualsAndActiveTrue(email.getId()))
+            {
+                emailsToSend.add(email);
+            }
         }
+        sendToListOfEmailAddresses(emailsToSend,message.getSubject(),message.getContent());
     }
 }

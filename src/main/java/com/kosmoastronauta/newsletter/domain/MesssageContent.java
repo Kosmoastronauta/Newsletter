@@ -24,11 +24,11 @@ public class MesssageContent
         this.subject = subject;
     }
 
-    public String getBody() {
+    public String getContent() {
         return content;
     }
 
-    public void setBody(String body) {
-        this.content = body;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

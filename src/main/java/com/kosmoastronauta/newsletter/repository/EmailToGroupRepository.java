@@ -11,5 +11,5 @@ public interface EmailToGroupRepository extends CrudRepository<EmailToGroup,Long
 
     List<EmailToGroup> getEmailToGroupByGroupIdEqualsAndActiveTrue(long groupId);
 
-    List<EmailToGroup> getDistinctByEmailIdAndActiveTrue();
+    boolean existsEmailToGroupByEmailIdEqualsAndActiveTrue(long emailId);
 }
