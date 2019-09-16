@@ -1,7 +1,7 @@
 package com.kosmoastronauta.newsletter.domain;
 
 import javax.persistence.*;
-import java.security.Key;
+import java.util.Set;
 
 @Entity
 public class EmailAddress
@@ -11,9 +11,18 @@ public class EmailAddress
     private long id;
 
     private String address;
-    private int groupId;
+    @ElementCollection(targetClass=Integer.class)
+    private Set<Integer> groups;
     private boolean active;
     private String pubKey;
+
+    public Set<Integer> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Integer> groups) {
+        this.groups = groups;
+    }
 
     public String getPubKey() {
         return pubKey;
@@ -21,14 +30,6 @@ public class EmailAddress
 
     public void setPubKey(String pubKey) {
         this.pubKey = pubKey;
-    }
-
-    public int getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
     }
 
     public boolean isActive() {

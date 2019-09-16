@@ -1,16 +1,13 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
+import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
+import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.security.*;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
@@ -19,6 +16,9 @@ public class EmailService
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
     @Autowired
    EmailRepository emailRepository;
+
+    @Autowired
+    EmailToGroupRepository emailToGroupRepository;
 
     public List<EmailAddress> getAllEmails()
     {
@@ -32,7 +32,10 @@ public class EmailService
     {
         if(emailValidation(emailAddress.getAddress()))
         {
-            emailAddress.setGroupId(1);
+            Set<Integer> set = new HashSet<>();
+            set.add(1);
+
+            emailAddress.setGroups(set);
             emailAddress.setActive(true);
             try
             {
@@ -53,8 +56,6 @@ public class EmailService
 
         }
         else throw new InvalidParameterException("Email address is invalid");
-
-
 
     }
 
