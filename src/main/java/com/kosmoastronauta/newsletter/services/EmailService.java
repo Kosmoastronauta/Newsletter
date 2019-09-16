@@ -32,10 +32,7 @@ public class EmailService
     {
         if(emailValidation(emailAddress.getAddress()))
         {
-            if(0 != emailAddress.getGroupId())
-            {
                 emailAddress.setGroupId(1); //default group
-            }
             try
             {
                 KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
@@ -50,8 +47,8 @@ public class EmailService
             {
                 logger.info("Invalid hash method");
             }
-            this.addEmailToGroup(emailAddress);
             emailRepository.save(emailAddress);
+            this.addEmailToGroup(emailAddress);
 
         }
         else throw new InvalidParameterException("Email address is invalid");
@@ -115,10 +112,12 @@ public class EmailService
     private void addEmailToGroup(EmailAddress emailAddress)
     {
         EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailIdEqualsAndGroupIdEquals(emailAddress.getId(), emailAddress.getGroupId());
-
         if(emailToGroup == null)
         {
-            emailToGroupRepository.save(new EmailToGroup(emailAddress.getId(), emailAddress.getGroupId()));
+            emailToGroup = new EmailToGroup(emailAddress.getId(), emailAddress.getGroupId());
+            System.out.println(emailAddress.getGroupId());
+            emailToGroup.setActive(true);
+            emailToGroupRepository.save(emailToGroup);
         }
         else
         {

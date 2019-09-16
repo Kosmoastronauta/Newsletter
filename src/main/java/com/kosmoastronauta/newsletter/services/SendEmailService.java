@@ -39,6 +39,7 @@ public class SendEmailService
         Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
         EmailAddress currentEmailAddress;
+        EmailAddress tempEmailAddress;
         for(int i = 0; i < idsOfGroups.size(); i++)
         {
             currentGroup = idsOfGroups.get(i);
@@ -46,8 +47,13 @@ public class SendEmailService
 
             for(int j = 0; j < addressesInOneGroup.size();  j++)
             {
-                currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(i).getId());
-                allAddressesSet.add(currentEmailAddress);
+                tempEmailAddress= emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(i).getId());
+                if(tempEmailAddress!=null)
+                {
+                    currentEmailAddress = tempEmailAddress;
+                    currentEmailAddress.setGroupId(idsOfGroups.get(i));
+                    allAddressesSet.add(currentEmailAddress);
+                }
             }
         }
         return new ArrayList<>(allAddressesSet);

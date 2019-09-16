@@ -38,12 +38,13 @@ public class EmailController
         return new ResponseEntity<>(emailAddress, HttpStatus.OK);
     }
 
-    @GetMapping(path = "/unsubscribe/{address}/{key}")
-    public ResponseEntity<EmailAddress> unsubscribe(@PathVariable String address, @PathVariable String key)
+    @GetMapping(path = "/unsubscribe/{address}/{groupId}/{key}")
+    public ResponseEntity<EmailAddress> unsubscribe(@PathVariable String address,
+                                                    @PathVariable int groupId, @PathVariable String key)
     {
         try
         {
-            if(emailService.unsubscribe(address,key)) return new ResponseEntity<>(HttpStatus.OK);
+            if(emailService.unsubscribe(address,groupId,key)) return new ResponseEntity<>(HttpStatus.OK);
             else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }catch(InvalidParameterException e)
         {
