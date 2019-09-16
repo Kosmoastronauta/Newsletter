@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -120,7 +121,12 @@ public class SendEmailService
 
     public void sendEmailToAll(MesssageContent message)
     {
-        List<EmailAddress> emailAddresses = emailRepository.getEmailAddressesByActiveIsTrue();
+        List<EmailToGroup> emailToGroups = emailToGroupRepository.getDistinctByEmailIdAndActiveTrue();
+        List<EmailAddress> emailAddresses = new ArrayList<>();
+        for(int i = 0; i <emailToGroups.size() ; i++)
+        {
+            emailAddresses.add(emailRepository.getEmailAddressesByIdEquals(emailToGroups.get(i).getEmailId()));
+        }
 
         String subject = message.getSubject();
         String body = message.getBody();
