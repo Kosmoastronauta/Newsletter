@@ -35,24 +35,35 @@ public class EmailService
                 emailAddress.setGroupId(1); //default group
             try
             {
-                KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA");
-                kpg.initialize(512);
-                KeyPair keyPair = kpg.generateKeyPair();
-                PublicKey publicKey = keyPair.getPublic();
-                String keyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-
-                emailAddress.setPubKey(removeSlashes(keyString));
-                logger.info(emailAddress.getPubKey());
-            } catch(NoSuchAlgorithmException e)
+                String keyString = generatePublicKey();
+                emailAddress.setPubKey(keyString);
+            } catch(NoSuchElementException e)
             {
-                logger.info("Invalid hash method");
+                logger.info(e.getMessage());
             }
             emailRepository.save(emailAddress);
             this.addEmailToGroup(emailAddress);
-
         }
         else throw new InvalidParameterException("Email address is invalid");
+    }
 
+    private String generatePublicKey()
+    {
+        KeyPairGenerator kpg;
+        try
+        {
+            kpg = KeyPairGenerator.getInstance("RSA");
+            kpg.initialize(512);
+            KeyPair keyPair = kpg.generateKeyPair();
+            PublicKey publicKey = keyPair.getPublic();
+            String keyString = Base64.getEncoder().encodeToString(publicKey.getEncoded());
+            keyString = removeSlashes(keyString);
+            return keyString;
+        }catch(NoSuchAlgorithmException e)
+        {
+            logger.info(e.getMessage());
+            throw new NoSuchElementException("Can't generate key!");
+        }
     }
 
     public boolean unsubscribe(String address, long groupId, String gettedPublicKey)
@@ -87,8 +98,7 @@ public class EmailService
     private boolean verifyKeys(EmailAddress emailAddress, String gettedPublicKey)
     {
         String publicKey = emailAddress.getPubKey();
-        if(gettedPublicKey.equals(publicKey)) return true;
-        else return false;
+        return gettedPublicKey.equals(publicKey);
     }
 
     public void deleteEmailAddressById(long id)
@@ -96,16 +106,15 @@ public class EmailService
         emailRepository.deleteById(id);
     }
 
-    public String removeSlashes(String word)
+    private String removeSlashes(String word)
     {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < word.length(); i++)
         {
             if(word.charAt(i) != '/')
-            {
                 sb.append(word.charAt(i));
-            }
         }
+
         return sb.toString();
     }
 
@@ -115,7 +124,6 @@ public class EmailService
         if(emailToGroup == null)
         {
             emailToGroup = new EmailToGroup(emailAddress.getId(), emailAddress.getGroupId());
-            System.out.println(emailAddress.getGroupId());
             emailToGroup.setActive(true);
             emailToGroupRepository.save(emailToGroup);
         }

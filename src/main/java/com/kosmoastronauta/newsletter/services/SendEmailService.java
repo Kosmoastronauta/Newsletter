@@ -70,7 +70,6 @@ public class SendEmailService
     {
         for(EmailAddress emailAddress : emailAddresses)
         {
-            System.out.println(emailAddress.getAddress());
             sendEmail(emailAddress, subject, content);
         }
     }
