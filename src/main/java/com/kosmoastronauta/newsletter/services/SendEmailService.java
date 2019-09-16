@@ -52,13 +52,8 @@ public class SendEmailService
         }
 
         List<EmailAddress> allEmailAddressesList = new ArrayList<>(allAddresses);
-
         //sending
-        for(EmailAddress emailAddress : allEmailAddressesList)
-        {
-            sendEmail(emailAddress, message.getSubject(), message.getBody());
-        }
-
+        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getBody());
     }
 
     public void sendEmailToGroup(int groupId, String subject, String content) throws NoSuchElementException
@@ -86,11 +81,11 @@ public class SendEmailService
 //        }
     }
 
-    public void sendToArrayOfEmails(EmailAddress[] emails, String subject, String content)
+    public void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
     {
-        for(int i = 0; i < emails.length; i++)
+        for(EmailAddress emailAddress : emailAddresses)
         {
-            sendEmail(emails[i],subject,content);
+            sendEmail(emailAddress, subject, content);
         }
     }
 
