@@ -33,25 +33,31 @@ public class SendEmailService
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
-    public void sendEmailToGroups(MesssageContent message)
+    private List<EmailAddress> getListOfUniqueEmailAddressesByGroups(List<Integer> idsOfGroups)
     {
         int currentGroup;
-        Set<EmailAddress> allAddresses = new HashSet<>();
+        Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
         EmailAddress currentEmailAddress;
-        for(int i = 0; i < message.getGroups().size(); i++)
+        for(int i = 0; i < idsOfGroups.size(); i++)
         {
-            currentGroup = message.getGroups().get(i);
+            currentGroup = idsOfGroups.get(i);
             addressesInOneGroup = emailToGroupRepository.getEmailToGroupByGroupIdEqualsAndActiveTrue(currentGroup);
 
             for(int j = 0; j < addressesInOneGroup.size();  j++)
             {
                 currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(i).getId());
-                allAddresses.add(currentEmailAddress);
+                allAddressesSet.add(currentEmailAddress);
             }
         }
+        List<EmailAddress> allAddressesList = new ArrayList<>(allAddressesSet);
+        return allAddressesList;
+    }
 
-        List<EmailAddress> allEmailAddressesList = new ArrayList<>(allAddresses);
+    public void sendEmailToGroups(MesssageContent message)
+    {
+
+        List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
         sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getBody());
     }
