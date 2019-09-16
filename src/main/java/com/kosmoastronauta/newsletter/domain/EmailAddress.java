@@ -11,7 +11,6 @@ public class EmailAddress
 
     private String address;
     private int groupId;
-    private boolean active;
     private String pubKey;
 
     public int getGroupId() {
@@ -28,14 +27,6 @@ public class EmailAddress
 
     public void setPubKey(String pubKey) {
         this.pubKey = pubKey;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public long getId() {
