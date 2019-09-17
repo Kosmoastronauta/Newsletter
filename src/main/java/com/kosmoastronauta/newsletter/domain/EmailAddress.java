@@ -11,7 +11,7 @@ public class EmailAddress
 
     private String address;
     private int groupId;
-    private boolean active;
+    private String pubKey;
 
     public int getGroupId() {
         return groupId;
@@ -21,12 +21,12 @@ public class EmailAddress
         this.groupId = groupId;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getPubKey() {
+        return pubKey;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setPubKey(String pubKey) {
+        this.pubKey = pubKey;
     }
 
     public long getId() {

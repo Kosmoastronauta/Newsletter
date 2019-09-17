@@ -1,19 +1,22 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
-import com.kosmoastronauta.newsletter.domain.Message;
+import com.kosmoastronauta.newsletter.domain.EmailToGroup;
+import com.kosmoastronauta.newsletter.domain.MesssageContent;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
+import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Properties;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
@@ -25,77 +28,113 @@ public class SendEmailService
     @Autowired
     EmailRepository emailRepository;
 
+    @Autowired
+    EmailToGroupRepository emailToGroupRepository;
+
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
-    public void sendEmailToGroups(Message message)
+    private List<EmailAddress> getListOfUniqueEmailAddressesByGroups(List<Integer> idsOfGroups)
     {
-        for(int i = 0; i < message.getGroups().size(); i++)
+        int currentGroup;
+        Set<EmailAddress> allAddressesSet = new HashSet<>();
+        List<EmailToGroup> addressesInOneGroup;
+        EmailAddress currentEmailAddress;
+        for(Integer idsOfGroup : idsOfGroups)
         {
-            try
+            currentGroup = idsOfGroup;
+            addressesInOneGroup = emailToGroupRepository.getEmailToGroupByGroupIdEqualsAndActiveTrue(currentGroup);
+
+            for(EmailToGroup emailToGroup : addressesInOneGroup)
             {
-                sendEmailToGroup(message.getGroups().get(i), message.getSubject(), message.getBody());
-            }catch(NoSuchElementException e)
-            {
-                logger.info(e.getMessage());
+                currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(emailToGroup.getEmailId());
+
+                if(currentEmailAddress != null)
+                {
+                    currentEmailAddress.setGroupId(idsOfGroup);
+                    allAddressesSet.add(currentEmailAddress);
+                }
             }
+        }
+        return new ArrayList<>(allAddressesSet);
+    }
+
+    public void sendEmailToGroups(MesssageContent message)
+    {
+
+        List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
+        //sending
+        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getContent());
+    }
+
+    private void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
+    {
+        for(EmailAddress emailAddress : emailAddresses)
+        {
+            sendEmail(emailAddress, subject, content);
         }
     }
 
-    public void sendEmailToGroup(int groupId, String subject, String content) throws NoSuchElementException
-    {
-        List<EmailAddress> emailAddresses;
-        emailAddresses = emailRepository.getEmailAddressesByGroupIdEquals(groupId);
-
-        if(emailAddresses.isEmpty()) throw new NoSuchElementException("There is no email with group ID: " + groupId);
-
-        for(int i = 0; i < emailAddresses.size(); i++)
-        {
-            try
-            {
-                sendEmail(emailAddresses.get(i),subject,content);
-            }catch(MailException e)
-            {
-                logger.info("Error: Mail to: +" + emailAddresses.get(i).getGroupId() + " wasn't sent !");
-            }
-        }
-    }
-
-    public void sendEmail(EmailAddress emailAddress,String subject, String body ) throws MailException
+    public void sendEmail(EmailAddress emailAddress,String subject, String content ) throws MailException
     {
         try
         {
-            Properties properties = new Properties();
-            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
-            properties.load(input);
-            String mailFrom = properties.getProperty("spring.mail.username");
-            SimpleMailMessage mail = new SimpleMailMessage();
-            mail.setTo(emailAddress.getAddress());
-            mail.setFrom(mailFrom);
-            mail.setSubject(subject);
-            mail.setText(body);
-
-            if(emailAddress.isActive())
-                javaMailSender.send(mail);
+            MimeMessage mail = prepareData(emailAddress, subject, content);
+            javaMailSender.send(mail);
 
         }catch(MailException e)
         {
             logger.info("Invalid address");
         }
-        catch(IOException e)
-        {
-            throw new NoSuchElementException("There is no mailFrom data !!!");
-        }
     }
 
-    public void sendEmailToAll(Message message)
+    private MimeMessage prepareData(EmailAddress emailAddress,String subject, String content )
     {
-        List<EmailAddress> emailAddresses = emailRepository.getEmailAddressesByActiveIsTrue();
-
-        String subject = message.getSubject();
-        String body = message.getBody();
-        for(EmailAddress emailAddress : emailAddresses)
+        MimeMessage mail = javaMailSender.createMimeMessage();
+        Properties properties = new Properties();
+        try
         {
-            sendEmail(emailAddress, subject, body);
+            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
+            properties.load(input);
+
+        }catch(FileNotFoundException e)
+        {
+            logger.info(e.getMessage());
         }
+        catch(IOException e)
+        {
+            logger.info(e.getMessage());
+        }
+        try
+        {
+            String mailFrom = properties.getProperty("spring.mail.username");
+
+            MimeMessageHelper helper = new MimeMessageHelper(mail);
+            helper.setTo(emailAddress.getAddress());
+            helper.setFrom(mailFrom);
+            helper.setSubject(subject);
+            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=http" +
+                    "://localhost:8181/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() +
+                     "/" +emailAddress.getPubKey() + ">Unsubscribe</a>", true);
+        }catch(MessagingException e)
+        {
+            logger.info(e.getMessage());
+        }
+        return mail;
+    }
+
+    public void sendEmailToAll(MesssageContent message)
+    {
+        List<EmailAddress> emails = new ArrayList<>();
+        emailRepository.findAll().forEach(emails::add);
+        List<EmailAddress> emailsToSend = new ArrayList<>();
+
+        for(EmailAddress email : emails)
+        {
+            if(emailToGroupRepository.existsEmailToGroupByEmailIdEqualsAndActiveTrue(email.getId()))
+            {
+                emailsToSend.add(email);
+            }
+        }
+        sendToListOfEmailAddresses(emailsToSend,message.getSubject(),message.getContent());
     }
 }

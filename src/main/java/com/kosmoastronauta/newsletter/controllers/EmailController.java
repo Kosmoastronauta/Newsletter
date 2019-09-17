@@ -1,7 +1,6 @@
 package com.kosmoastronauta.newsletter.controllers;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
-import com.kosmoastronauta.newsletter.domain.Message;
 import com.kosmoastronauta.newsletter.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,7 +38,19 @@ public class EmailController
         return new ResponseEntity<>(emailAddress, HttpStatus.OK);
     }
 
-
+    @GetMapping(path = "/unsubscribe/{address}/{groupId}/{key}")
+    public ResponseEntity<EmailAddress> unsubscribe(@PathVariable String address,
+                                                    @PathVariable int groupId, @PathVariable String key)
+    {
+        try
+        {
+            if(emailService.unsubscribe(address,groupId,key)) return new ResponseEntity<>(HttpStatus.OK);
+            else return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }catch(InvalidParameterException e)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @DeleteMapping(path = "/email/{id}")
     public ResponseEntity<EmailAddress> deleteEmail(@PathVariable long id)

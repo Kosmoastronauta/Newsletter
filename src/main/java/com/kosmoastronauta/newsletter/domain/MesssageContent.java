@@ -2,10 +2,10 @@ package com.kosmoastronauta.newsletter.domain;
 
 import java.util.List;
 
-public class Message
+public class MesssageContent
 {
     private String subject;
-    private String body;
+    private String content;
     private List<Integer> groups;
 
     public List<Integer> getGroups() {
@@ -24,11 +24,11 @@ public class Message
         this.subject = subject;
     }
 
-    public String getBody() {
-        return body;
+    public String getContent() {
+        return content;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setContent(String content) {
+        this.content = content;
     }
 }
