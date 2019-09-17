@@ -45,4 +45,10 @@ public class EmailGroupController
          }
         return new ResponseEntity<>(groups, HttpStatus.OK);
     }
+
+    @PostMapping(path = "/addEmail/{address}/ToGroup/{groupName}")
+    public ResponseEntity<HttpStatus> addEmailToGroup(@PathVariable String address, @PathVariable String groupName)
+    {
+        emailGroupService.addEmailToGroup(address, groupName);
+    }
 }
