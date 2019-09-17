@@ -1,7 +1,9 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailGroup;
+import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
+import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,9 @@ public class EmailGroupService
 {
     @Autowired
     EmailGroupRepository emailGroupRepository;
+
+    @Autowired
+    EmailToGroupRepository emailToGroupRepository;
 
     public void addGroup(EmailGroup emailGroup)
     {
@@ -38,5 +43,11 @@ public class EmailGroupService
 
         if(groups.isEmpty()) throw new NoSuchFieldException("There is no groups!");
         return groups;
+    }
+
+
+    public void addEmailToGroup(String address, String groupName)
+    {
+        EmailToGroup emailToGroup = emailGroupRepository.
     }
 }
