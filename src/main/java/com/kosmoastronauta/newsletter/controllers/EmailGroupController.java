@@ -49,7 +49,13 @@ public class EmailGroupController
     @PostMapping(path = "/addEmail/{address}/ToGroup/{groupName}")
     public ResponseEntity<HttpStatus> addEmailToGroup(@PathVariable String address, @PathVariable String groupName)
     {
-        emailGroupService.addEmailToGroup(address, groupName);
+        try
+        {
+            emailGroupService.addEmailToGroup(address, groupName);
+        }catch(NoSuchFieldException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

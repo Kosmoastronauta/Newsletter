@@ -1,16 +1,20 @@
 package com.kosmoastronauta.newsletter.services;
 
+import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailGroup;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
+import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jca.cci.core.support.CciDaoSupport;
 import org.springframework.stereotype.Service;
 
 import javax.sound.midi.SoundbankResource;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class EmailGroupService
@@ -20,6 +24,11 @@ public class EmailGroupService
 
     @Autowired
     EmailToGroupRepository emailToGroupRepository;
+
+    @Autowired
+    EmailRepository emailRepository;
+
+    private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
     public void addGroup(EmailGroup emailGroup)
     {
@@ -46,11 +55,23 @@ public class EmailGroupService
     }
 
 
-    public void addEmailToGroup(String address, String groupName)
+    public void addEmailToGroup(String address, String groupName) throws NoSuchFieldException
     {
         EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailAddressEqualsAndGroupNameEquals(address, groupName);
-        System.out.println("Email id: " + emailToGroup.getEmailId());
-        System.out.println("Group id: " + emailToGroup.getGroupId());
 
+        if(emailToGroup == null)
+        {
+            EmailGroup emailGroup = emailGroupRepository.getEmailGroupByNameEquals(groupName);
+            EmailAddress emailAddress = emailRepository.getEmailAddressByAddressEquals(address);
+            if(emailAddress == null || emailGroup == null)
+            {
+                throw new NoSuchFieldException("There doesn't exist that email!");
+            }
+        }
+        else
+            {
+                emailToGroup.setActive(true);
+                emailToGroupRepository.save(emailToGroup);
+            }
     }
 }
