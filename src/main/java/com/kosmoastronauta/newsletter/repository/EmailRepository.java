@@ -9,5 +9,7 @@ public interface EmailRepository extends CrudRepository<EmailAddress, Long>
 {
      EmailAddress getEmailAddressesByIdEquals(long id);
 
-     EmailAddress getEmailAddressesByPubKeyEquals(String pubKey);
+     EmailAddress getEmailAddressByPubKeyEquals(String pubKey);
+
+     EmailAddress getEmailAddressByAddressEquals(String address);
 }

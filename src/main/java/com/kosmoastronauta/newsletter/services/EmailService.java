@@ -68,16 +68,16 @@ public class EmailService
 
     public boolean unsubscribe(String address, long groupId, String gettedPublicKey)
     {
-        EmailAddress emailAddress = emailRepository.getEmailAddressesByPubKeyEquals(gettedPublicKey);
+        EmailAddress emailAddress = emailRepository.getEmailAddressByPubKeyEquals(gettedPublicKey);
+        System.out.println(emailAddress.getPubKey());
 
         if(!address.equals(emailAddress.getAddress())) throw new InvalidParameterException(); // if key is ok but
         // for another address
         if(verifyKeys(emailAddress, gettedPublicKey))
         {
             EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailIdEqualsAndGroupIdEquals(emailAddress.getId(), groupId);
-            emailToGroup.setActive(true);
+            emailToGroup.setActive(false);
             emailToGroupRepository.save(emailToGroup);
-            emailRepository.save(emailAddress);
 
             return true;
         }

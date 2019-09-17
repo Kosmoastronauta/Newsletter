@@ -39,18 +39,18 @@ public class SendEmailService
         Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
         EmailAddress currentEmailAddress;
-        for(int i = 0; i < idsOfGroups.size(); i++)
+        for(Integer idsOfGroup : idsOfGroups)
         {
-            currentGroup = idsOfGroups.get(i);
+            currentGroup = idsOfGroup;
             addressesInOneGroup = emailToGroupRepository.getEmailToGroupByGroupIdEqualsAndActiveTrue(currentGroup);
 
-            for(int j = 0; j < addressesInOneGroup.size();  j++)
+            for(EmailToGroup emailToGroup : addressesInOneGroup)
             {
-                currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(addressesInOneGroup.get(j).getEmailId());
+                currentEmailAddress = emailRepository.getEmailAddressesByIdEquals(emailToGroup.getEmailId());
 
-                if(currentEmailAddress!=null)
+                if(currentEmailAddress != null)
                 {
-                    currentEmailAddress.setGroupId(idsOfGroups.get(i));
+                    currentEmailAddress.setGroupId(idsOfGroup);
                     allAddressesSet.add(currentEmailAddress);
                 }
             }
@@ -112,7 +112,9 @@ public class SendEmailService
             helper.setTo(emailAddress.getAddress());
             helper.setFrom(mailFrom);
             helper.setSubject(subject);
-            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=http://localhost:8181/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() + "/" + emailAddress + ".getPubKey()" + ">Unsubscribe</a>", true);
+            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=http" +
+                    "://localhost:8181/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() +
+                     "/" +emailAddress.getPubKey() + ">Unsubscribe</a>", true);
         }catch(MessagingException e)
         {
             logger.info(e.getMessage());
