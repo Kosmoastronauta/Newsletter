@@ -50,5 +50,6 @@ public class EmailGroupController
     public ResponseEntity<HttpStatus> addEmailToGroup(@PathVariable String address, @PathVariable String groupName)
     {
         emailGroupService.addEmailToGroup(address, groupName);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

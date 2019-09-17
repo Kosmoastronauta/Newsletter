@@ -48,6 +48,9 @@ public class EmailGroupService
 
     public void addEmailToGroup(String address, String groupName)
     {
-        EmailToGroup emailToGroup = emailGroupRepository.
+        EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailAddressEqualsAndGroupNameEquals(address, groupName);
+        System.out.println("Email id: " + emailToGroup.getEmailId());
+        System.out.println("Group id: " + emailToGroup.getGroupId());
+
     }
 }

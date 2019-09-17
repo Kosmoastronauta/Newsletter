@@ -14,7 +14,7 @@ public interface EmailToGroupRepository extends CrudRepository<EmailToGroup,Long
 
     boolean existsEmailToGroupByEmailIdEqualsAndActiveTrue(long emailId);
 
-    @Query(value = "SELECT email_to_group.id, email_to_group.email_id, email_to_group.email_id, email_to_group.active" +
+    @Query(value = "SELECT email_to_group.id, email_to_group.email_id, email_to_group.group_id, email_to_group.active" +
             " " +
             "FROM " +
             "email_to_group INNER JOIN email_address ON " +
