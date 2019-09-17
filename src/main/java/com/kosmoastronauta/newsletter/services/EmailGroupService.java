@@ -7,10 +7,7 @@ import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jca.cci.core.support.CciDaoSupport;
 import org.springframework.stereotype.Service;
-
-import javax.sound.midi.SoundbankResource;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,27 +51,18 @@ public class EmailGroupService
         return groups;
     }
 
-
     public void addEmailToGroup(String address, String groupName) throws NoSuchFieldException
     {
         EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailAddressEqualsAndGroupNameEquals(address, groupName);
 
         if(emailToGroup == null)
-        {
-            EmailGroup emailGroup = emailGroupRepository.getEmailGroupByNameEquals(groupName);
+        {   EmailGroup emailGroup = emailGroupRepository.getEmailGroupByNameEquals(groupName);
             EmailAddress emailAddress = emailRepository.getEmailAddressByAddressEquals(address);
-
-            if(emailAddress == null || emailGroup == null)
-            {
-                throw new NoSuchFieldException("There doesn't exist that email!");
-            }
-                emailToGroup.setGroupId(emailGroup.getId());
-                emailToGroup.setEmailId(emailAddress.getId());
+            emailToGroup = new EmailToGroup();
+            emailToGroup.setEmailId(emailAddress.getId());
+            emailToGroup.setGroupId(emailGroup.getId());
         }
-        else
-            {
-                emailToGroup.setActive(true);
-                emailToGroupRepository.save(emailToGroup);
-            }
+        emailToGroup.setActive(true);
+        emailToGroupRepository.save(emailToGroup);
     }
 }
