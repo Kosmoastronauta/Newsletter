@@ -63,10 +63,13 @@ public class EmailGroupService
         {
             EmailGroup emailGroup = emailGroupRepository.getEmailGroupByNameEquals(groupName);
             EmailAddress emailAddress = emailRepository.getEmailAddressByAddressEquals(address);
+
             if(emailAddress == null || emailGroup == null)
             {
                 throw new NoSuchFieldException("There doesn't exist that email!");
             }
+                emailToGroup.setGroupId(emailGroup.getId());
+                emailToGroup.setEmailId(emailAddress.getId());
         }
         else
             {
