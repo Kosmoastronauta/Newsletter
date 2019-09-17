@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 @Service
 public class SendEmailService
 {
+    private static final String PROPERTIES_FILE = "/home/mateusz/PropertiesFile/application-dev.properties";
+    private static final String HOST_URL = "http://localhost:8181";
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -39,9 +41,9 @@ public class SendEmailService
         Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
         EmailAddress currentEmailAddress;
-        for(Integer idsOfGroup : idsOfGroups)
+        for(Integer idOfGroup : idsOfGroups)
         {
-            currentGroup = idsOfGroup;
+            currentGroup = idOfGroup;
             addressesInOneGroup = emailToGroupRepository.getEmailToGroupByGroupIdEqualsAndActiveTrue(currentGroup);
 
             for(EmailToGroup emailToGroup : addressesInOneGroup)
@@ -50,7 +52,7 @@ public class SendEmailService
 
                 if(currentEmailAddress != null)
                 {
-                    currentEmailAddress.setGroupId(idsOfGroup);
+                    currentEmailAddress.setGroupId(idOfGroup);
                     allAddressesSet.add(currentEmailAddress);
                 }
             }
@@ -74,7 +76,7 @@ public class SendEmailService
         }
     }
 
-    public void sendEmail(EmailAddress emailAddress,String subject, String content ) throws MailException
+    private void sendEmail(EmailAddress emailAddress, String subject, String content) throws MailException
     {
         try
         {
@@ -93,7 +95,7 @@ public class SendEmailService
         Properties properties = new Properties();
         try
         {
-            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
+            InputStream input = new FileInputStream(PROPERTIES_FILE);
             properties.load(input);
 
         }catch(FileNotFoundException e)
@@ -112,8 +114,8 @@ public class SendEmailService
             helper.setTo(emailAddress.getAddress());
             helper.setFrom(mailFrom);
             helper.setSubject(subject);
-            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=http" +
-                    "://localhost:8181/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() +
+            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href="+ HOST_URL+
+                    "/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() +
                      "/" +emailAddress.getPubKey() + ">Unsubscribe</a>", true);
         }catch(MessagingException e)
         {
