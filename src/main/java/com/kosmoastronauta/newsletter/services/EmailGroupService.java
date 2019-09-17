@@ -33,13 +33,11 @@ public class EmailGroupService
             throw new InvalidParameterException("group name can't be empty");
 
         emailGroupRepository.save(emailGroup);
-
     }
 
     private boolean groupNameValidation(String name)
     {
-       if(name==null || name.equals("")) return false;
-        return true;
+        return name != null && !name.equals("");
     }
 
     public List<EmailGroup> getAllGroups() throws NoSuchFieldException

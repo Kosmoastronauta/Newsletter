@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 public class EmailService
 {
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
+
     @Autowired
     EmailRepository emailRepository;
 
@@ -32,7 +33,7 @@ public class EmailService
     {
         if(emailValidation(emailAddress.getAddress()))
         {
-                emailAddress.setGroupId(1); //default group
+            emailAddress.setGroupId(1); //default group
             try
             {
                 String keyString = generatePublicKey();
@@ -69,7 +70,6 @@ public class EmailService
     public boolean unsubscribe(String address, long groupId, String gettedPublicKey)
     {
         EmailAddress emailAddress = emailRepository.getEmailAddressByPubKeyEquals(gettedPublicKey);
-        System.out.println(emailAddress.getPubKey());
 
         if(!address.equals(emailAddress.getAddress())) throw new InvalidParameterException(); // if key is ok but
         // for another address
@@ -88,9 +88,7 @@ public class EmailService
     {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         if(address == null || address.equals(""))
-        {
             return false;
-        }
 
         return address.matches(regex);
     }

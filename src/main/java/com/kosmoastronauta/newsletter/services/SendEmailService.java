@@ -24,6 +24,7 @@ public class SendEmailService
 {
     private static final String PROPERTIES_FILE = "/home/mateusz/PropertiesFile/application-dev.properties";
     private static final String HOST_URL = "http://localhost:8181";
+
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -133,9 +134,7 @@ public class SendEmailService
         for(EmailAddress email : emails)
         {
             if(emailToGroupRepository.existsEmailToGroupByEmailIdEqualsAndActiveTrue(email.getId()))
-            {
                 emailsToSend.add(email);
-            }
         }
         sendToListOfEmailAddresses(emailsToSend,message.getSubject(),message.getContent());
     }
