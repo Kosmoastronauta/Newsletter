@@ -58,6 +58,11 @@ public class EmailGroupService
         if(emailToGroup == null)
         {   EmailGroup emailGroup = emailGroupRepository.getEmailGroupByNameEquals(groupName);
             EmailAddress emailAddress = emailRepository.getEmailAddressByAddressEquals(address);
+
+            if(emailGroup==null || emailAddress==null)
+            {
+                throw new NoSuchFieldException("There is no such email or group!");
+            }
             emailToGroup = new EmailToGroup();
             emailToGroup.setEmailId(emailAddress.getId());
             emailToGroup.setGroupId(emailGroup.getId());
