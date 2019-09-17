@@ -18,7 +18,7 @@ public class ActionController
     ActionService actionService;
 
     @GetMapping(path = "/group/{groupId}/actions/")
-    public ResponseEntity<List<Action>> getAllActionsByGroupId(@PathVariable String groupId)
+    public ResponseEntity<List<Action>> getAllActionsByGroupId(@PathVariable long groupId)
     {
         List<Action> actions;
         try
