@@ -37,7 +37,7 @@ public class ActionService
         if(!actionRepository.existsGroupActionByIdEqualsAndGroupIdEquals(actionId,groupId))
             throw new NoSuchFieldException("There does not exist action with that id for that group Id");
 
-        actionRepository.deleteById(groupId);
+        actionRepository.deleteById(actionId);
     }
 
     public void addActionForGroup(GroupAction groupAction) throws NoSuchFieldException,InvalidParameterException

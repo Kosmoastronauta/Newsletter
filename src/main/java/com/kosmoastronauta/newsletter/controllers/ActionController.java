@@ -49,7 +49,7 @@ public class ActionController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "delete/actionId/{actionId}/groupId/{groupId}")
+    @DeleteMapping(path = "delete/actionId/{actionId}/groupId/{groupId}/")
     public ResponseEntity<HttpStatus> deleteActionIdByActionIdAndGroupId(@PathVariable long actionId,
                                                                          @PathVariable long groupId)
     {

@@ -182,6 +182,7 @@ public class SendEmailService
         List<Object[]> objects =
                 actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupId,actionName);
         if(objects.isEmpty()) throw new NoSuchElementException("There is no emails in this group");
+
         AddressesWithMessage addressesWithMessage = getListOfEmailAddressesByListOfObjects(objects);
 
         for(int i=0; i<addressesWithMessage.getEmailAddresses().size(); i++)
@@ -200,6 +201,7 @@ public class SendEmailService
     private AddressesWithMessage getListOfEmailAddressesByListOfObjects(List<Object[]> objects)
     {
         AddressesWithMessage addressesWithMessage = new AddressesWithMessage();
+        addressesWithMessage.setEmailAddresses(new ArrayList<>());
         boolean once = true;
 
         for(Object[] object : objects)
