@@ -1,5 +1,6 @@
 package com.kosmoastronauta.newsletter.services;
 
+import com.kosmoastronauta.newsletter.domain.GroupAction;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.domain.MesssageContent;
@@ -137,5 +138,9 @@ public class SendEmailService
                 emailsToSend.add(email);
         }
         sendToListOfEmailAddresses(emailsToSend,message.getSubject(),message.getContent());
+    }
+
+    public void sendEmailToGroupByAction(GroupAction groupAction)
+    {
     }
 }

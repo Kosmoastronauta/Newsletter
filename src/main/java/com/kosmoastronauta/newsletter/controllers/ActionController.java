@@ -1,6 +1,6 @@
 package com.kosmoastronauta.newsletter.controllers;
 
-import com.kosmoastronauta.newsletter.domain.Action;
+import com.kosmoastronauta.newsletter.domain.GroupAction;
 import com.kosmoastronauta.newsletter.services.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class ActionController
@@ -17,30 +18,30 @@ public class ActionController
     ActionService actionService;
 
     @GetMapping(path = "/groupId/{groupId}/actions/")
-    public ResponseEntity<List<Action>> getAllActionsByGroupId(@PathVariable long groupId)
+    public ResponseEntity<List<GroupAction>> getAllActionsByGroupId(@PathVariable long groupId)
     {
-        List<Action> actions;
+        List<GroupAction> groupActions;
         try
         {
-            actions = actionService.getAllActionsByGroupId(groupId);
+            groupActions = actionService.getAllActionsByGroupId(groupId);
         }catch(NoSuchFieldException e)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(actions, HttpStatus.OK);
+        catch(NoSuchElementException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(groupActions, HttpStatus.OK);
     }
 
     @PostMapping(path = "/addActionToGroup/")
-    public ResponseEntity<HttpStatus> addActionToGroupById(@RequestBody Action action)
+    public ResponseEntity<HttpStatus> addActionToGroupById(@RequestBody GroupAction groupAction)
     {
         try
         {
-            actionService.addActionForGroup(action);
-        }catch(InvalidParameterException e)
-        {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        catch(NoSuchFieldException e)
+            actionService.addActionForGroup(groupAction);
+        }catch(InvalidParameterException | NoSuchFieldException e)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

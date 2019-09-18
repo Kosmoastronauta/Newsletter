@@ -1,14 +1,15 @@
 package com.kosmoastronauta.newsletter.services;
 
-import com.kosmoastronauta.newsletter.domain.Action;
-import com.kosmoastronauta.newsletter.domain.EmailGroup;
+import com.kosmoastronauta.newsletter.domain.GroupAction;
 import com.kosmoastronauta.newsletter.repository.ActionRepository;
 import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
+import javassist.compiler.NoFieldException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ActionService
@@ -19,29 +20,31 @@ public class ActionService
     @Autowired
     EmailGroupRepository emailGroupRepository;
 
-    public List<Action> getAllActionsByGroupId(long groupId) throws NoSuchFieldException
+    public List<GroupAction> getAllActionsByGroupId(long groupId) throws NoSuchFieldException, NoSuchElementException
     {
-        List<Action> actions = actionRepository.getActionsByGroupIdEquals(groupId);
+        if(!emailGroupRepository.existsById(groupId)) throw new NoSuchFieldException("There is no group with that id!");
 
-        if(actions == null)
-            throw new NoSuchFieldException("There is no actions for group with that id");
+        List<GroupAction> groupActions = actionRepository.getActionsByGroupIdEquals(groupId);
 
-        else return actions;
+        if(groupActions == null)
+            throw new NoSuchElementException("There is no actions for group with that id!");
+
+        else return groupActions;
     }
 
-    public void addActionForGroup(Action action) throws NoSuchFieldException,InvalidParameterException
+    public void addActionForGroup(GroupAction groupAction) throws NoSuchFieldException,InvalidParameterException
     {
-        if(!isActionValid(action)) throw new InvalidParameterException("Invalid data!");
+        if(!isActionValid(groupAction)) throw new InvalidParameterException("Invalid data!");
 
-        if(!emailGroupRepository.existsById(action.getGroupId()))
+        if(!emailGroupRepository.existsById(groupAction.getGroupId()))
             throw new NoSuchFieldException("There is no group with that id!");
 
-        actionRepository.save(action);
+        actionRepository.save(groupAction);
     }
 
-    private boolean isActionValid(Action action)
+    private boolean isActionValid(GroupAction groupAction)
     {
         // if any of necessary field is empty
-        return action.getGroupId() != 0 && !action.getName().isEmpty() && !action.getSchema().isEmpty();
+        return groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getSchema().isEmpty();
     }
 }
