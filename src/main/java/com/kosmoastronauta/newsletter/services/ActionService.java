@@ -32,9 +32,12 @@ public class ActionService
         else return groupActions;
     }
 
-    public void deleteActionByActionIdAndGroupId(long actionId, long groupId)
+    public void deleteActionByActionIdAndGroupId(long actionId, long groupId) throws NoSuchFieldException
     {
+        if(!actionRepository.existsGroupActionByIdEqualsAndGroupIdEquals(actionId,groupId))
+            throw new NoSuchFieldException("There does not exist action with that id for that group Id");
 
+        actionRepository.deleteById(groupId);
     }
 
     public void addActionForGroup(GroupAction groupAction) throws NoSuchFieldException,InvalidParameterException

@@ -53,6 +53,13 @@ public class ActionController
     public ResponseEntity<HttpStatus> deleteActionIdByActionIdAndGroupId(@PathVariable long actionId,
                                                                          @PathVariable long groupId)
     {
-
+        try
+        {
+            actionService.deleteActionByActionIdAndGroupId(actionId,groupId);
+        }catch(NoSuchFieldException e)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
