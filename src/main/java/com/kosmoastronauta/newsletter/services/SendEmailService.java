@@ -41,6 +41,37 @@ public class SendEmailService
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
+    class AddressesWithMessage
+    {
+        private List<EmailAddress> emailAddresses;
+        private String subject;
+        private String content;
+
+        public List<EmailAddress> getEmailAddresses() {
+            return emailAddresses;
+        }
+
+        public void setEmailAddresses(List<EmailAddress> emailAddresses) {
+            this.emailAddresses = emailAddresses;
+        }
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public void setSubject(String subject) {
+            this.subject = subject;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
+
     private List<EmailAddress> getListOfUniqueEmailAddressesByGroups(List<Integer> idsOfGroups)
     {
         int currentGroup;
@@ -71,7 +102,7 @@ public class SendEmailService
 
         List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
-        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getContent());
+        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(), message.getContent());
     }
 
     private void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
@@ -89,13 +120,13 @@ public class SendEmailService
             MimeMessage mail = prepareData(emailAddress, subject, content);
             javaMailSender.send(mail);
 
-        }catch(MailException e)
+        } catch(MailException e)
         {
             logger.info("Invalid address");
         }
     }
 
-    private MimeMessage prepareData(EmailAddress emailAddress,String subject, String content )
+    private MimeMessage prepareData(EmailAddress emailAddress, String subject, String content)
     {
         MimeMessage mail = javaMailSender.createMimeMessage();
         Properties properties = new Properties();
@@ -104,11 +135,10 @@ public class SendEmailService
             InputStream input = new FileInputStream(PROPERTIES_FILE);
             properties.load(input);
 
-        }catch(FileNotFoundException e)
+        } catch(FileNotFoundException e)
         {
             logger.info(e.getMessage());
-        }
-        catch(IOException e)
+        } catch(IOException e)
         {
             logger.info(e.getMessage());
         }
@@ -120,10 +150,8 @@ public class SendEmailService
             helper.setTo(emailAddress.getAddress());
             helper.setFrom(mailFrom);
             helper.setSubject(subject);
-            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href="+ HOST_URL+
-                    "/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() +
-                     "/" +emailAddress.getPubKey() + ">Unsubscribe</a>", true);
-        }catch(MessagingException e)
+            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=" + HOST_URL + "/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() + "/" + emailAddress.getPubKey() + ">Unsubscribe</a>", true);
+        } catch(MessagingException e)
         {
             logger.info(e.getMessage());
         }
@@ -141,64 +169,38 @@ public class SendEmailService
             if(emailToGroupRepository.existsEmailToGroupByEmailIdEqualsAndActiveTrue(email.getId()))
                 emailsToSend.add(email);
         }
-        sendToListOfEmailAddresses(emailsToSend,message.getSubject(),message.getContent());
+        sendToListOfEmailAddresses(emailsToSend, message.getSubject(), message.getContent());
     }
 
     public void sendEmailToGroupByAction(GroupAction groupAction)
     {
         List<Object[]> objects = actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupAction.getName());
+        AddressesWithMessage addressesWithMessage = getListOfEmailAddressesByListOfObjects(objects);
 
-        List<EmailAddress> emailAddresses = new ArrayList<>();
-        String subject;
-        String content;
+        sendToListOfEmailAddresses(addressesWithMessage.getEmailAddresses(),
+                addressesWithMessage.getSubject(),
+                addressesWithMessage.content);
+
+    }
+
+    private AddressesWithMessage getListOfEmailAddressesByListOfObjects(List<Object[]> objects)
+    {
+        AddressesWithMessage addressesWithMessage = new AddressesWithMessage();
         boolean once = true;
 
         for(Object[] object : objects)
         {
-            emailAddresses.add(new EmailAddress(object[0].toString(), Long.valueOf(object[1].toString())));
+            addressesWithMessage.emailAddresses.add(new EmailAddress(object[0].toString(), Long.valueOf(object[1].toString())));
 
             if(once)
             {
-                subject = object[2].toString();
-                content = object[3].toString();
+                addressesWithMessage.setSubject(object[2].toString());
+                addressesWithMessage.setContent(object[3].toString());
                 once = false;
             }
         }
+
+        return addressesWithMessage;
     }
 
-    private List<EmailAddress> getListOfEmailAddressesByListOfObjects(List<Object[]> objects)
-    {
-
-    }
-
-    class AddressesWithMessage
-    {
-        private List<EmailAddress> emailAddress;
-        private String subject;
-        private String content;
-
-        public List<EmailAddress> getEmailAddress() {
-            return emailAddress;
-        }
-
-        public void setEmailAddress(List<EmailAddress> emailAddress) {
-            this.emailAddress = emailAddress;
-        }
-
-        public String getSubject() {
-            return subject;
-        }
-
-        public void setSubject(String subject) {
-            this.subject = subject;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
 }
