@@ -149,10 +149,56 @@ public class SendEmailService
         List<Object[]> objects = actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupAction.getName());
 
         List<EmailAddress> emailAddresses = new ArrayList<>();
+        String subject;
+        String content;
+        boolean once = true;
 
-        for(int i = 0; i <objects.size() ; i++)
+        for(Object[] object : objects)
         {
+            emailAddresses.add(new EmailAddress(object[0].toString(), Long.valueOf(object[1].toString())));
 
+            if(once)
+            {
+                subject = object[2].toString();
+                content = object[3].toString();
+                once = false;
+            }
+        }
+    }
+
+    private List<EmailAddress> getListOfEmailAddressesByListOfObjects(List<Object[]> objects)
+    {
+
+    }
+
+    class AddressesWithMessage
+    {
+        private List<EmailAddress> emailAddress;
+        private String subject;
+        private String content;
+
+        public List<EmailAddress> getEmailAddress() {
+            return emailAddress;
+        }
+
+        public void setEmailAddress(List<EmailAddress> emailAddress) {
+            this.emailAddress = emailAddress;
+        }
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public void setSubject(String subject) {
+            this.subject = subject;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
         }
     }
 }
