@@ -185,16 +185,9 @@ public class SendEmailService
 
         AddressesWithMessage addressesWithMessage = getListOfEmailAddressesByListOfObjects(objects);
 
-        for(int i=0; i<addressesWithMessage.getEmailAddresses().size(); i++)
-        {
-            System.out.println(addressesWithMessage.getEmailAddresses().get(i).getAddress());
-            System.out.println(addressesWithMessage.getSubject());
-            System.out.println(addressesWithMessage.getContent());
-        }
-/*
         sendToListOfEmailAddresses(addressesWithMessage.getEmailAddresses(),
                 addressesWithMessage.getSubject(),
-                addressesWithMessage.content);*/
+                addressesWithMessage.content);
 
     }
 
