@@ -1,9 +1,6 @@
 package com.kosmoastronauta.newsletter.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class GroupAction
@@ -14,7 +11,16 @@ public class GroupAction
 
     private long groupId;
     private String name;
-    private String schema;
+    private String content;
+    private String subject;
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
 
     public long getId() {
         return id;
@@ -40,11 +46,12 @@ public class GroupAction
         this.name = name;
     }
 
-    public String getSchema() {
-        return schema;
+    public String getContent() {
+        return content;
     }
 
-    public void setSchema(String schema) {
-        this.schema = schema;
+    public void setContent(String content) {
+        this.content = content;
     }
+
 }

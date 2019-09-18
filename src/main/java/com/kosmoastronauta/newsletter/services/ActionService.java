@@ -26,7 +26,7 @@ public class ActionService
 
         List<GroupAction> groupActions = actionRepository.getActionsByGroupIdEquals(groupId);
 
-        if(groupActions == null)
+        if(groupActions.isEmpty())
             throw new NoSuchElementException("There is no actions for group with that id!");
 
         else return groupActions;
@@ -45,6 +45,6 @@ public class ActionService
     private boolean isActionValid(GroupAction groupAction)
     {
         // if any of necessary field is empty
-        return groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getSchema().isEmpty();
+        return groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getContent().isEmpty();
     }
 }
