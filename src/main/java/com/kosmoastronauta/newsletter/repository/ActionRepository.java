@@ -12,7 +12,8 @@ public interface ActionRepository extends CrudRepository<GroupAction, Long>
 {
     List<GroupAction> getActionsByGroupIdEquals(long groupId);
 
-    @Query(value = "SELECT email_address.address, group_action.subject, group_action.content " +
+    @Query(value = "SELECT email_address.address, email_to_group.group_id, group_action.subject, group_action.content" +
+            " " +
             "FROM " + "email_address INNER JOIN email_to_group " +
             "ON " +
                     "email_address.id = email_to_group.email_id " +
