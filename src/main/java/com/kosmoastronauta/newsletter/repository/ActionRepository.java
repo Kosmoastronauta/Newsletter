@@ -19,13 +19,13 @@ public interface ActionRepository extends CrudRepository<GroupAction, Long>
                     "email_address.id = email_to_group.email_id " +
                     "INNER JOIN group_action " +
                     "ON " +
-                    "group_action_group_id = email_to_group.email_id " +
+                    "group_action.group_id = email_to_group.group_id " +
                     "WHERE " +
                     "email_to_group.active = true " +
                     "AND " +
                     "group_action.name =:actionName " +
                     "AND " +
-                    "group_action.group_id=:groupId", nativeQuery = true)
+                    "email_to_group.group_id=:groupId", nativeQuery = true)
 
     List<Object[]> getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(long groupId, String actionName);
 }

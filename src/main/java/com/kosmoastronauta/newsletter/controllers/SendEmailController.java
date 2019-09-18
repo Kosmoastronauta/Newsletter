@@ -36,7 +36,7 @@ public class SendEmailController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping(path = "/sendToGroupId/{groupId}/actionName/{actionName}")
+    @PostMapping(path = "/sendToGroupId/{groupId}/actionName/{actionName}/")
     public ResponseEntity<HttpStatus> sendEmailToGroupByActionName(@PathVariable long groupId,
                                                                    @PathVariable String actionName)
     {

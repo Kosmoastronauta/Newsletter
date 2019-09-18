@@ -45,6 +45,6 @@ public class ActionService
     private boolean isActionValid(GroupAction groupAction)
     {
         // if any of necessary field is empty
-        return groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getContent().isEmpty();
+        return groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getContent().isEmpty() && !groupAction.getSubject().isEmpty();
     }
 }
