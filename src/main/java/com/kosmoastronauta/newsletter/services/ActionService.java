@@ -3,10 +3,8 @@ package com.kosmoastronauta.newsletter.services;
 import com.kosmoastronauta.newsletter.domain.GroupAction;
 import com.kosmoastronauta.newsletter.repository.ActionRepository;
 import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
-import javassist.compiler.NoFieldException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.NoSuchElementException;

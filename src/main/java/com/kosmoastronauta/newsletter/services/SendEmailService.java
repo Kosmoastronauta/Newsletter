@@ -1,6 +1,5 @@
 package com.kosmoastronauta.newsletter.services;
 
-import com.kosmoastronauta.newsletter.domain.GroupAction;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.domain.MesssageContent;
@@ -103,7 +102,6 @@ public class SendEmailService
 
     public void sendEmailToGroups(MesssageContent message)
     {
-
         List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
         sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(), message.getContent());
@@ -188,7 +186,6 @@ public class SendEmailService
         sendToListOfEmailAddresses(addressesWithMessage.getEmailAddresses(),
                 addressesWithMessage.getSubject(),
                 addressesWithMessage.content);
-
     }
 
     private AddressesWithMessage getListOfEmailAddressesByListOfObjects(List<Object[]> objects)
@@ -211,5 +208,4 @@ public class SendEmailService
 
         return addressesWithMessage;
     }
-
 }

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -50,8 +49,7 @@ public class ActionController
     }
 
     @DeleteMapping(path = "delete/actionId/{actionId}/groupId/{groupId}/")
-    public ResponseEntity<HttpStatus> deleteActionIdByActionIdAndGroupId(@PathVariable long actionId,
-                                                                         @PathVariable long groupId)
+    public ResponseEntity<HttpStatus> deleteActionIdByActionIdAndGroupId(@PathVariable long actionId, @PathVariable long groupId)
     {
         try
         {

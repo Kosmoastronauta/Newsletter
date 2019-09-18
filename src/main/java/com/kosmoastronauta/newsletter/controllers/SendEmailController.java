@@ -1,6 +1,5 @@
 package com.kosmoastronauta.newsletter.controllers;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.MesssageContent;
 import com.kosmoastronauta.newsletter.services.EmailService;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
