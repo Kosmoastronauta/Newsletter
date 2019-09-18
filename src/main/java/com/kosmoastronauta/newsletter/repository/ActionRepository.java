@@ -25,5 +25,5 @@ public interface ActionRepository extends CrudRepository<GroupAction, Long>
                     "AND " +
                     "group_action.name =:actionName", nativeQuery = true)
 
-    List<Object[]> getListOfActiveAddressesSubjectsAndContentByActionName(String actionName);
+    List<Object[]> getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(String actionName);
 }

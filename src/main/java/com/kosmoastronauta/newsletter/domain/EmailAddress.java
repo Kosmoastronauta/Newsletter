@@ -9,15 +9,23 @@ public class EmailAddress
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    public EmailAddress() {}
+
+    public EmailAddress(String address, long groupId)
+    {
+        this.address = address;
+        this.groupId = groupId;
+    }
+
     private String address;
-    private int groupId;
+    private long groupId;
     private String pubKey;
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 

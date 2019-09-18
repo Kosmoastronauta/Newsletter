@@ -4,6 +4,7 @@ import com.kosmoastronauta.newsletter.domain.GroupAction;
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.domain.MesssageContent;
+import com.kosmoastronauta.newsletter.repository.ActionRepository;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class SendEmailService
 
     @Autowired
     EmailToGroupRepository emailToGroupRepository;
+
+    @Autowired
+    ActionRepository actionRepository;
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
@@ -142,6 +146,13 @@ public class SendEmailService
 
     public void sendEmailToGroupByAction(GroupAction groupAction)
     {
+        List<Object[]> objects = actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupAction.getName());
 
+        List<EmailAddress> emailAddresses = new ArrayList<>();
+
+        for(int i = 0; i <objects.size() ; i++)
+        {
+
+        }
     }
 }
