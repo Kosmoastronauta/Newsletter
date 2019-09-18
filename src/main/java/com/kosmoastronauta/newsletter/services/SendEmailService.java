@@ -5,6 +5,7 @@ import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.domain.MesssageContent;
 import com.kosmoastronauta.newsletter.repository.ActionRepository;
+import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,9 @@ public class SendEmailService
 
     @Autowired
     ActionRepository actionRepository;
+
+    @Autowired
+    EmailGroupRepository emailGroupRepository;
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
@@ -172,16 +176,24 @@ public class SendEmailService
         sendToListOfEmailAddresses(emailsToSend, message.getSubject(), message.getContent());
     }
 
-    public void sendEmailToGroupByAction(long groupId, String actionName) throws  NoSuchElementException
+    public void sendEmailToGroupByAction(long groupId, String actionName) throws  NoSuchElementException, NoSuchFieldException
     {
+        if(!emailGroupRepository.existsById(groupId)) throw new NoSuchFieldException("There is no group with that id");
         List<Object[]> objects =
                 actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupId,actionName);
         if(objects.isEmpty()) throw new NoSuchElementException("There is no emails in this group");
         AddressesWithMessage addressesWithMessage = getListOfEmailAddressesByListOfObjects(objects);
 
+        for(int i=0; i<addressesWithMessage.getEmailAddresses().size(); i++)
+        {
+            System.out.println(addressesWithMessage.getEmailAddresses().get(i).getAddress());
+            System.out.println(addressesWithMessage.getSubject());
+            System.out.println(addressesWithMessage.getContent());
+        }
+/*
         sendToListOfEmailAddresses(addressesWithMessage.getEmailAddresses(),
                 addressesWithMessage.getSubject(),
-                addressesWithMessage.content);
+                addressesWithMessage.content);*/
 
     }
 
