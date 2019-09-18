@@ -32,6 +32,11 @@ public class ActionService
         else return groupActions;
     }
 
+    public void deleteActionByActionIdAndGroupId(long actionId, long groupId)
+    {
+
+    }
+
     public void addActionForGroup(GroupAction groupAction) throws NoSuchFieldException,InvalidParameterException
     {
         if(!isActionValid(groupAction)) throw new InvalidParameterException("Invalid data!");

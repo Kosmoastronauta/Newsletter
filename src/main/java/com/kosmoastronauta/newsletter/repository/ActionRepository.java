@@ -28,4 +28,6 @@ public interface ActionRepository extends CrudRepository<GroupAction, Long>
                     "email_to_group.group_id=:groupId", nativeQuery = true)
 
     List<Object[]> getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(long groupId, String actionName);
+
+    boolean existsGroupActionByIdEqualsAndGroupIdEquals(long actionId, long groupId);
 }
