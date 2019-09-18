@@ -25,17 +25,20 @@ public class EmailController
         return new ResponseEntity<>(emails, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/emails/")
-    public ResponseEntity<EmailAddress> addEmail(@RequestBody EmailAddress emailAddress)
+    @PostMapping(path = "/emails/groupName/{groupName}/startActionName/{actionName}/address/{address}/")
+    public ResponseEntity<EmailAddress> addEmail(@PathVariable String groupName,
+                                                 @PathVariable String actionName,
+                                                 @PathVariable String address)
     {
         try
         {
-            emailService.addEmail(emailAddress);
-        }catch(InvalidParameterException e)
+            emailService.addEmail(address,groupName,actionName);
+        }catch(InvalidParameterException | NoSuchFieldException e)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(emailAddress, HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path = "/unsubscribe/{address}/{groupId}/{key}")

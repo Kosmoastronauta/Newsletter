@@ -30,4 +30,11 @@ public interface ActionRepository extends CrudRepository<GroupAction, Long>
     List<Object[]> getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(long groupId, String actionName);
 
     boolean existsGroupActionByIdEqualsAndGroupIdEquals(long actionId, long groupId);
+
+    @Query(value = "SELECT group_action.id, group_action.group_id, group_action.name, group_action.content, " + "group_action.subject " +
+            "FROM " + "group_action " +
+            "INNER JOIN email_group " +
+            "ON " + "email_group.id=group_action.group_id " +
+            "WHERE " + "email_group.name=:nameOfGroup", nativeQuery = true)
+    GroupAction getGroupActionByGroupName(String nameOfGroup);
 }

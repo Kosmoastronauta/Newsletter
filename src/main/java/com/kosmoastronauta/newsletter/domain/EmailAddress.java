@@ -11,6 +11,11 @@ public class EmailAddress
 
     public EmailAddress() {}
 
+    public EmailAddress(String address)
+    {
+        this.address = address;
+    }
+
     public EmailAddress(String address, long groupId)
     {
         this.address = address;

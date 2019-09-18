@@ -115,7 +115,7 @@ public class SendEmailService
         }
     }
 
-    private void sendEmail(EmailAddress emailAddress, String subject, String content) throws MailException
+    public void sendEmail(EmailAddress emailAddress, String subject, String content) throws MailException
     {
         try
         {

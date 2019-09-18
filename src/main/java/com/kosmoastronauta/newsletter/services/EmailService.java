@@ -1,7 +1,11 @@
 package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
+import com.kosmoastronauta.newsletter.domain.EmailGroup;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
+import com.kosmoastronauta.newsletter.domain.GroupAction;
+import com.kosmoastronauta.newsletter.repository.ActionRepository;
+import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,15 @@ public class EmailService
     @Autowired
     EmailToGroupRepository emailToGroupRepository;
 
+    @Autowired
+    ActionRepository actionRepository;
+
+    @Autowired
+    EmailGroupRepository groupRepository;
+
+    @Autowired
+    SendEmailService sendEmailService;
+
     public List<EmailAddress> getAllEmails()
     {
         List<EmailAddress> emails = new ArrayList<>();
@@ -29,21 +42,29 @@ public class EmailService
         return emails;
     }
 
-    public void addEmail(EmailAddress emailAddress)
+    public void addEmail(String address, String groupName, String startAction) throws NoSuchFieldException
     {
+        EmailAddress emailAddress = new EmailAddress(address);
         if(emailValidation(emailAddress.getAddress()))
         {
-            emailAddress.setGroupId(1); //default group
+            EmailGroup emailGroup = groupRepository.getEmailGroupByNameEquals(groupName);
+
+            if(emailGroup == null) throw new NoSuchFieldException("There is no group with that name !");
+
+            emailAddress.setGroupId(emailGroup.getId());
             try
             {
-                String keyString = generatePublicKey();
-                emailAddress.setPubKey(keyString);
+                emailAddress.setPubKey(generatePublicKey());
             } catch(NoSuchElementException e)
             {
                 logger.info(e.getMessage());
             }
             emailRepository.save(emailAddress);
             this.addEmailToGroup(emailAddress);
+
+            GroupAction groupAction = actionRepository.getGroupActionByGroupName(groupName);
+            sendEmailService.sendEmail(emailAddress,groupAction.getSubject(),groupAction.getContent());
+
         }
         else throw new InvalidParameterException("Email address is invalid");
     }
