@@ -172,9 +172,10 @@ public class SendEmailService
         sendToListOfEmailAddresses(emailsToSend, message.getSubject(), message.getContent());
     }
 
-    public void sendEmailToGroupByAction(GroupAction groupAction) throws  NoSuchElementException
+    public void sendEmailToGroupByAction(long groupId, String actionName) throws  NoSuchElementException
     {
-        List<Object[]> objects = actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupAction.getName());
+        List<Object[]> objects =
+                actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupId,actionName);
         if(objects.isEmpty()) throw new NoSuchElementException("There is no emails in this group");
         AddressesWithMessage addressesWithMessage = getListOfEmailAddressesByListOfObjects(objects);
 

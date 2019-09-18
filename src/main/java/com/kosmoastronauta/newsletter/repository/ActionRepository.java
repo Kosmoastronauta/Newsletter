@@ -23,7 +23,9 @@ public interface ActionRepository extends CrudRepository<GroupAction, Long>
                     "WHERE " +
                     "email_to_group.active = true " +
                     "AND " +
-                    "group_action.name =:actionName", nativeQuery = true)
+                    "group_action.name =:actionName " +
+                    "AND " +
+                    "group_action.group_id=:groupId", nativeQuery = true)
 
-    List<Object[]> getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(String actionName);
+    List<Object[]> getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(long groupId, String actionName);
 }
