@@ -16,6 +16,7 @@ public class ActionController
     @Autowired
     ActionService actionService;
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping(path = "/groupId/{groupId}/actions/")
     public ResponseEntity<List<GroupAction>> getAllActionsByGroupId(@PathVariable long groupId)
     {
@@ -34,6 +35,7 @@ public class ActionController
         return new ResponseEntity<>(groupActions, HttpStatus.OK);
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/addActionToGroup/")
     public ResponseEntity<HttpStatus> addActionToGroupById(@RequestBody GroupAction groupAction)
     {

@@ -42,6 +42,7 @@ public class ActionService
     {
         if(!isActionValid(groupAction)) throw new InvalidParameterException("Invalid data!");
 
+        groupAction.setId(0);
         if(!emailGroupRepository.existsById(groupAction.getGroupId()))
             throw new NoSuchFieldException("There is no group with that id!");
 
@@ -51,6 +52,15 @@ public class ActionService
     private boolean isActionValid(GroupAction groupAction)
     {
         // if any of necessary field is empty
-        return groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getContent().isEmpty() && !groupAction.getSubject().isEmpty();
+        return  !isSpaceInName(groupAction.getName()) && groupAction.getGroupId() != 0 && !groupAction.getName().isEmpty() && !groupAction.getContent().isEmpty() && !groupAction.getSubject().isEmpty();
+    }
+
+    private boolean isSpaceInName(String name)
+    {
+        for(int i = 0; i < name.length(); i++)
+        {
+            if(name.charAt(i) == ' ') return true;
+        }
+        return false;
     }
 }
