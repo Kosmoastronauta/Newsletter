@@ -67,14 +67,17 @@ public class EmailGroupController
         List<EmailAddress> emailAddresses;
         try
         {
-            emailAddresses = emailGroupService.getListOEmailAddressesByGroupName();
-        }catch(NoSuchElementException e)
-        {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            emailAddresses = emailGroupService.getListOEmailAddressesByGroupName(groupName);
         }
         catch(InvalidParameterException e)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        catch(NoSuchElementException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(emailAddresses, HttpStatus.OK);
     }
 }

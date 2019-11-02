@@ -72,7 +72,9 @@ public class EmailGroupService
 
     public List<EmailAddress> getListOEmailAddressesByGroupName(String groupName)
     {
-        if(emailGroupRepository.existsById())
+        if(!emailGroupRepository.existsEmailGroupByNameEquals(groupName))
+            throw new InvalidParameterException("There is no group with that name");
+
         List<EmailAddress> emails;
         emails = emailRepository.getListOfEmailAddressesByGroupNameEquals(groupName);
 
