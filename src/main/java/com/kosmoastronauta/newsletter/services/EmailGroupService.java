@@ -68,4 +68,10 @@ public class EmailGroupService
         emailToGroup.setActive(true);
         emailToGroupRepository.save(emailToGroup);
     }
+
+    public List<EmailAddress> getListOEmailAddressesByGroupName(String groupName)
+    {
+        List<EmailAddress> emails;
+        emails = emailGroupRepository.getEmailGroupByNameEquals()
+    }
 }

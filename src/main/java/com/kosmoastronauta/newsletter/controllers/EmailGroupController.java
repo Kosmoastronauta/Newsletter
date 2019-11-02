@@ -1,5 +1,6 @@
 package com.kosmoastronauta.newsletter.controllers;
 
+import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailGroup;
 import com.kosmoastronauta.newsletter.services.EmailGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,11 @@ public class EmailGroupController
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/getEmailsByGroupName/{groupName}/")
+    public ResponseEntity<List<EmailAddress>> getEmailsByGroupName(@PathVariable String groupName)
+    {
+
     }
 }
