@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 @Service
@@ -72,6 +73,11 @@ public class EmailGroupService
     public List<EmailAddress> getListOEmailAddressesByGroupName(String groupName)
     {
         List<EmailAddress> emails;
-        emails = emailGroupRepository.getEmailGroupByNameEquals()
+        emails = emailRepository.getListOfEmailAddressesByGroupNameEquals(groupName);
+
+        if(emails.isEmpty())
+            throw new NoSuchElementException("There is no emails in this group");
+
+        return emails;
     }
 }
