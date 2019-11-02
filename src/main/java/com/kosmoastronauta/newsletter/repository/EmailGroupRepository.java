@@ -12,4 +12,6 @@ import java.util.List;
 public interface EmailGroupRepository extends CrudRepository<EmailGroup, Long>
 {
     EmailGroup getEmailGroupByNameEquals(String name);
+
+    boolean existsEmailGroupByNameEquals(String name);
 }

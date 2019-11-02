@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 public class EmailGroupController
@@ -63,6 +64,17 @@ public class EmailGroupController
     @GetMapping(path = "/getEmailsByGroupName/{groupName}/")
     public ResponseEntity<List<EmailAddress>> getEmailsByGroupName(@PathVariable String groupName)
     {
-
+        List<EmailAddress> emailAddresses;
+        try
+        {
+            emailAddresses = emailGroupService.getListOEmailAddressesByGroupName();
+        }catch(NoSuchElementException e)
+        {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        catch(InvalidParameterException e)
+        {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

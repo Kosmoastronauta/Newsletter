@@ -72,6 +72,7 @@ public class EmailGroupService
 
     public List<EmailAddress> getListOEmailAddressesByGroupName(String groupName)
     {
+        if(emailGroupRepository.existsById())
         List<EmailAddress> emails;
         emails = emailRepository.getListOfEmailAddressesByGroupNameEquals(groupName);
 
