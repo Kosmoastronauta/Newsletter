@@ -14,10 +14,15 @@ import java.util.logging.Logger;
 @RestController
 public class SendEmailController
 {
-    @Autowired
-    SendEmailService sendEmailService;
+    final SendEmailService sendEmailService;
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
+
+    @Autowired
+    public SendEmailController(SendEmailService sendEmailService)
+    {
+        this.sendEmailService = sendEmailService;
+    }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/send/groups/", consumes = "application/json")
