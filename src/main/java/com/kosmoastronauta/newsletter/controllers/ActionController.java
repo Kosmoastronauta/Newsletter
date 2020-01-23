@@ -13,8 +13,14 @@ import java.util.NoSuchElementException;
 @RestController
 public class ActionController
 {
+
+    private final ActionService actionService;
+
     @Autowired
-    ActionService actionService;
+    public ActionController(ActionService actionService)
+    {
+        this.actionService = actionService;
+    }
 
     @CrossOrigin(origins = "http://localhost:4200")
     @GetMapping(path = "/groupId/{groupId}/actions/")

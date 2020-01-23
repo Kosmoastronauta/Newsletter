@@ -14,8 +14,14 @@ import java.util.NoSuchElementException;
 @RestController
 public class EmailGroupController
 {
+
+    private final EmailGroupService emailGroupService;
+
     @Autowired
-    EmailGroupService emailGroupService;
+    public EmailGroupController(EmailGroupService emailGroupService)
+    {
+        this.emailGroupService = emailGroupService;
+    }
 
 //    @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/createGroup/")
