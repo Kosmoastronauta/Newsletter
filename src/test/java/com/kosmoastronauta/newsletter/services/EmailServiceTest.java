@@ -1,8 +1,6 @@
 package com.kosmoastronauta.newsletter.services;
 
-
 import com.github.javafaker.Faker;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,5 +25,4 @@ public class EmailServiceTest
         Assertions.assertFalse(EmailService.emailValidation("asd5f@s23af"));
         Assertions.assertFalse(EmailService.emailValidation("safse%.com"));
     }
-
 }

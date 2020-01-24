@@ -8,7 +8,6 @@ public class GroupAction
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private long groupId;
     private String name;
     private String content;

@@ -8,6 +8,9 @@ public class EmailAddress
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String address;
+    private long groupId;
+    private String pubKey;
 
     public EmailAddress() {}
 
@@ -21,10 +24,6 @@ public class EmailAddress
         this.address = address;
         this.groupId = groupId;
     }
-
-    private String address;
-    private long groupId;
-    private String pubKey;
 
     public long getGroupId() {
         return groupId;
