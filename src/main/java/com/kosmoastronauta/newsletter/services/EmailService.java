@@ -106,7 +106,7 @@ public class EmailService
         return false;
     }
 
-    private static boolean emailValidation(String address)
+    protected static boolean emailValidation(String address)
     {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         if(address == null || address.equals(""))
