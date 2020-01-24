@@ -13,8 +13,14 @@ import java.util.List;
 public class EmailController
 {
 
+
+    private final EmailService emailService;
+
     @Autowired
-    EmailService emailService;
+    public EmailController(EmailService emailService)
+    {
+        this.emailService = emailService;
+    }
 
     @GetMapping(path = "/emails/")
     public ResponseEntity<List<EmailAddress>> getEmails()
@@ -25,17 +31,20 @@ public class EmailController
         return new ResponseEntity<>(emails, HttpStatus.OK);
     }
 
-    @PostMapping(path = "/emails/")
-    public ResponseEntity<EmailAddress> addEmail(@RequestBody EmailAddress emailAddress)
+    @PostMapping(path = "/emails/groupName/{groupName}/startActionName/{actionName}/address/{address}/")
+    public ResponseEntity<EmailAddress> addEmail(@PathVariable String groupName,
+                                                 @PathVariable String actionName,
+                                                 @PathVariable String address)
     {
         try
         {
-            emailService.addEmail(emailAddress);
-        }catch(InvalidParameterException e)
+            emailService.addEmail(address,groupName,actionName);
+        }catch(InvalidParameterException | NoSuchFieldException e)
         {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(emailAddress, HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path = "/unsubscribe/{address}/{groupId}/{key}")

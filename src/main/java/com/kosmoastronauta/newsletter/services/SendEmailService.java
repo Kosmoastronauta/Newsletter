@@ -2,7 +2,9 @@ package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
-import com.kosmoastronauta.newsletter.domain.MesssageContent;
+import com.kosmoastronauta.newsletter.domain.MessageContent;
+import com.kosmoastronauta.newsletter.repository.ActionRepository;
+import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
 import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +24,58 @@ import java.util.logging.Logger;
 @Service
 public class SendEmailService
 {
+    private static final String PROPERTIES_FILE = "/home/mateusz/PropertiesFile/application-dev.properties";
+    private static final String HOST_URL = "http://localhost:8181";
+
     @Autowired
     private JavaMailSender javaMailSender;
+    private final EmailRepository emailRepository;
+    private final EmailToGroupRepository emailToGroupRepository;
+    private final ActionRepository actionRepository;
+    private final EmailGroupRepository emailGroupRepository;
 
     @Autowired
-    EmailRepository emailRepository;
-
-    @Autowired
-    EmailToGroupRepository emailToGroupRepository;
+    public SendEmailService(EmailRepository emailRepository, EmailToGroupRepository emailToGroupRepository,
+                            ActionRepository actionRepository, EmailGroupRepository emailGroupRepository)
+    {
+        this.emailRepository = emailRepository;
+        this.emailToGroupRepository = emailToGroupRepository;
+        this.actionRepository = actionRepository;
+        this.emailGroupRepository = emailGroupRepository;
+    }
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
+
+    static class AddressesWithMessage
+    {
+        private List<EmailAddress> emailAddresses;
+        private String subject;
+        private String content;
+
+        public List<EmailAddress> getEmailAddresses() {
+            return emailAddresses;
+        }
+
+        public void setEmailAddresses(List<EmailAddress> emailAddresses) {
+            this.emailAddresses = emailAddresses;
+        }
+
+        public String getSubject() {
+            return subject;
+        }
+
+        public void setSubject(String subject) {
+            this.subject = subject;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+    }
 
     private List<EmailAddress> getListOfUniqueEmailAddressesByGroups(List<Integer> idsOfGroups)
     {
@@ -39,9 +83,9 @@ public class SendEmailService
         Set<EmailAddress> allAddressesSet = new HashSet<>();
         List<EmailToGroup> addressesInOneGroup;
         EmailAddress currentEmailAddress;
-        for(Integer idsOfGroup : idsOfGroups)
+        for(Integer idOfGroup : idsOfGroups)
         {
-            currentGroup = idsOfGroup;
+            currentGroup = idOfGroup;
             addressesInOneGroup = emailToGroupRepository.getEmailToGroupByGroupIdEqualsAndActiveTrue(currentGroup);
 
             for(EmailToGroup emailToGroup : addressesInOneGroup)
@@ -50,7 +94,7 @@ public class SendEmailService
 
                 if(currentEmailAddress != null)
                 {
-                    currentEmailAddress.setGroupId(idsOfGroup);
+                    currentEmailAddress.setGroupId(idOfGroup);
                     allAddressesSet.add(currentEmailAddress);
                 }
             }
@@ -58,12 +102,11 @@ public class SendEmailService
         return new ArrayList<>(allAddressesSet);
     }
 
-    public void sendEmailToGroups(MesssageContent message)
+    public void sendEmailToGroups(MessageContent message)
     {
-
         List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
-        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(),message.getContent());
+        sendToListOfEmailAddresses(allEmailAddressesList, message.getSubject(), message.getContent());
     }
 
     private void sendToListOfEmailAddresses(List<EmailAddress> emailAddresses, String subject, String content)
@@ -74,33 +117,32 @@ public class SendEmailService
         }
     }
 
-    public void sendEmail(EmailAddress emailAddress,String subject, String content ) throws MailException
+    public void sendEmail(EmailAddress emailAddress, String subject, String content) throws MailException
     {
         try
         {
             MimeMessage mail = prepareData(emailAddress, subject, content);
             javaMailSender.send(mail);
 
-        }catch(MailException e)
+        } catch(MailException e)
         {
             logger.info("Invalid address");
         }
     }
 
-    private MimeMessage prepareData(EmailAddress emailAddress,String subject, String content )
+    private MimeMessage prepareData(EmailAddress emailAddress, String subject, String content)
     {
         MimeMessage mail = javaMailSender.createMimeMessage();
         Properties properties = new Properties();
         try
         {
-            InputStream input = new FileInputStream("/home/mateusz/PropertiesFile/application-dev.properties");
+            InputStream input = new FileInputStream(PROPERTIES_FILE);
             properties.load(input);
 
-        }catch(FileNotFoundException e)
+        } catch(FileNotFoundException e)
         {
             logger.info(e.getMessage());
-        }
-        catch(IOException e)
+        } catch(IOException e)
         {
             logger.info(e.getMessage());
         }
@@ -112,17 +154,15 @@ public class SendEmailService
             helper.setTo(emailAddress.getAddress());
             helper.setFrom(mailFrom);
             helper.setSubject(subject);
-            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=http" +
-                    "://localhost:8181/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() +
-                     "/" +emailAddress.getPubKey() + ">Unsubscribe</a>", true);
-        }catch(MessagingException e)
+            helper.setText(content + "</br> <p>Sent To: " + emailAddress.getAddress() + ".</p>" + "<a href=" + HOST_URL + "/unsubscribe/" + emailAddress.getAddress() + "/" + emailAddress.getGroupId() + "/" + emailAddress.getPubKey() + ">Unsubscribe</a>", true);
+        } catch(MessagingException e)
         {
             logger.info(e.getMessage());
         }
         return mail;
     }
 
-    public void sendEmailToAll(MesssageContent message)
+    public void sendEmailToAll(MessageContent message)
     {
         List<EmailAddress> emails = new ArrayList<>();
         emailRepository.findAll().forEach(emails::add);
@@ -131,10 +171,43 @@ public class SendEmailService
         for(EmailAddress email : emails)
         {
             if(emailToGroupRepository.existsEmailToGroupByEmailIdEqualsAndActiveTrue(email.getId()))
-            {
                 emailsToSend.add(email);
+        }
+        sendToListOfEmailAddresses(emailsToSend, message.getSubject(), message.getContent());
+    }
+
+    public void sendEmailToGroupByAction(long groupId, String actionName) throws  NoSuchElementException, NoSuchFieldException
+    {
+        if(!emailGroupRepository.existsById(groupId)) throw new NoSuchFieldException("There is no group with that id");
+        List<Object[]> objects =
+                actionRepository.getListOfActiveAddressesGroupIdSubjectsAndContentByActionName(groupId,actionName);
+        if(objects.isEmpty()) throw new NoSuchElementException("There is no emails in this group");
+
+        AddressesWithMessage addressesWithMessage = getListOfEmailAddressesByListOfObjects(objects);
+
+        sendToListOfEmailAddresses(addressesWithMessage.getEmailAddresses(),
+                addressesWithMessage.getSubject(),
+                addressesWithMessage.content);
+    }
+
+    private AddressesWithMessage getListOfEmailAddressesByListOfObjects(List<Object[]> objects)
+    {
+        AddressesWithMessage addressesWithMessage = new AddressesWithMessage();
+        addressesWithMessage.setEmailAddresses(new ArrayList<>());
+        boolean once = true;
+
+        for(Object[] object : objects)
+        {
+            addressesWithMessage.emailAddresses.add(new EmailAddress(object[0].toString(), Long.valueOf(object[1].toString())));
+
+            if(once)
+            {
+                addressesWithMessage.setSubject(object[2].toString());
+                addressesWithMessage.setContent(object[3].toString());
+                once = false;
             }
         }
-        sendToListOfEmailAddresses(emailsToSend,message.getSubject(),message.getContent());
+
+        return addressesWithMessage;
     }
 }

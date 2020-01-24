@@ -9,16 +9,16 @@ import javax.persistence.Id;
 public class EmailGroup
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private String name;
 
     public EmailGroup(){}
 
     public EmailGroup(String name) {
         this.name = name;
     }
-
-    private String name;
 
     public String getName() {
         return name;

@@ -2,7 +2,7 @@ package com.kosmoastronauta.newsletter.domain;
 
 import java.util.List;
 
-public class MesssageContent
+public class MessageContent
 {
     private String subject;
     private String content;

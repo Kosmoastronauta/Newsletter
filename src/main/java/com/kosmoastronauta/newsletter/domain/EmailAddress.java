@@ -6,18 +6,30 @@ import javax.persistence.*;
 public class EmailAddress
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String address;
-    private int groupId;
+    private long groupId;
     private String pubKey;
 
-    public int getGroupId() {
+    public EmailAddress() {}
+
+    public EmailAddress(String address)
+    {
+        this.address = address;
+    }
+
+    public EmailAddress(String address, long groupId)
+    {
+        this.address = address;
+        this.groupId = groupId;
+    }
+
+    public long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 

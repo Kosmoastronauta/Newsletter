@@ -1,20 +1,36 @@
 package com.kosmoastronauta.newsletter.services;
 
+import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailGroup;
+import com.kosmoastronauta.newsletter.domain.EmailToGroup;
 import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
+import com.kosmoastronauta.newsletter.repository.EmailRepository;
+import com.kosmoastronauta.newsletter.repository.EmailToGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.sound.midi.SoundbankResource;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 @Service
 public class EmailGroupService
 {
+    private final EmailGroupRepository emailGroupRepository;
+    private final EmailToGroupRepository emailToGroupRepository;
+    private final EmailRepository emailRepository;
+
     @Autowired
-    EmailGroupRepository emailGroupRepository;
+    public EmailGroupService(EmailGroupRepository emailGroupRepository, EmailToGroupRepository emailToGroupRepository
+            ,EmailRepository emailRepository)
+    {
+        this.emailGroupRepository = emailGroupRepository;
+        this.emailToGroupRepository = emailToGroupRepository;
+        this.emailRepository = emailRepository;
+    }
+
+    private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
     public void addGroup(EmailGroup emailGroup)
     {
@@ -22,13 +38,11 @@ public class EmailGroupService
             throw new InvalidParameterException("group name can't be empty");
 
         emailGroupRepository.save(emailGroup);
-
     }
 
     private boolean groupNameValidation(String name)
     {
-       if(name==null || name.equals("")) return false;
-        return true;
+        return name != null && !name.equals("");
     }
 
     public List<EmailGroup> getAllGroups() throws NoSuchFieldException
@@ -38,5 +52,39 @@ public class EmailGroupService
 
         if(groups.isEmpty()) throw new NoSuchFieldException("There is no groups!");
         return groups;
+    }
+
+    public void addEmailToGroup(String address, String groupName) throws NoSuchFieldException
+    {
+        EmailToGroup emailToGroup = emailToGroupRepository.getEmailToGroupByEmailAddressEqualsAndGroupNameEquals(address, groupName);
+
+        if(emailToGroup == null)
+        {   EmailGroup emailGroup = emailGroupRepository.getEmailGroupByNameEquals(groupName);
+            EmailAddress emailAddress = emailRepository.getEmailAddressByAddressEquals(address);
+
+            if(emailGroup==null || emailAddress==null)
+            {
+                throw new NoSuchFieldException("There is no such email or group!");
+            }
+            emailToGroup = new EmailToGroup();
+            emailToGroup.setEmailId(emailAddress.getId());
+            emailToGroup.setGroupId(emailGroup.getId());
+        }
+        emailToGroup.setActive(true);
+        emailToGroupRepository.save(emailToGroup);
+    }
+
+    public List<EmailAddress> getListOEmailAddressesByGroupName(String groupName)
+    {
+        if(!emailGroupRepository.existsEmailGroupByNameEquals(groupName))
+            throw new InvalidParameterException("There is no group with that name");
+
+        List<EmailAddress> emails;
+        emails = emailRepository.getListOfEmailAddressesByGroupNameEquals(groupName);
+
+        if(emails.isEmpty())
+            throw new NoSuchElementException("There is no emails in this group");
+
+        return emails;
     }
 }
