@@ -19,20 +19,22 @@ public class EmailService
 {
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
-    @Autowired
-    EmailRepository emailRepository;
+    private final EmailRepository emailRepository;
+    private final EmailToGroupRepository emailToGroupRepository;
+    private final ActionRepository actionRepository;
+    private final EmailGroupRepository groupRepository;
+    private final SendEmailService sendEmailService;
 
     @Autowired
-    EmailToGroupRepository emailToGroupRepository;
-
-    @Autowired
-    ActionRepository actionRepository;
-
-    @Autowired
-    EmailGroupRepository groupRepository;
-
-    @Autowired
-    SendEmailService sendEmailService;
+    public EmailService(EmailRepository emailRepository, EmailToGroupRepository emailToGroupRepository,
+                        ActionRepository actionRepository, EmailGroupRepository emailGroupRepository,
+                        SendEmailService sendEmailService) {
+        this.emailRepository = emailRepository;
+        this.emailToGroupRepository = emailToGroupRepository;
+        this.actionRepository = actionRepository;
+        this.groupRepository = emailGroupRepository;
+        this.sendEmailService = sendEmailService;
+    }
 
     public List<EmailAddress> getAllEmails()
     {
@@ -64,7 +66,6 @@ public class EmailService
 
             GroupAction groupAction = actionRepository.getGroupActionByGroupName(groupName);
             sendEmailService.sendEmail(emailAddress,groupAction.getSubject(),groupAction.getContent());
-
         }
         else throw new InvalidParameterException("Email address is invalid");
     }

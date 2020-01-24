@@ -29,22 +29,25 @@ public class SendEmailService
 
     @Autowired
     private JavaMailSender javaMailSender;
+    private final EmailRepository emailRepository;
+    private final EmailToGroupRepository emailToGroupRepository;
+    private final ActionRepository actionRepository;
+    private final EmailGroupRepository emailGroupRepository;
 
     @Autowired
-    EmailRepository emailRepository;
+    public SendEmailService(EmailRepository emailRepository, EmailToGroupRepository emailToGroupRepository,
+                            ActionRepository actionRepository, EmailGroupRepository emailGroupRepository)
+    {
+        this.emailRepository = emailRepository;
+        this.emailToGroupRepository = emailToGroupRepository;
+        this.actionRepository = actionRepository;
+        this.emailGroupRepository = emailGroupRepository;
+    }
 
-    @Autowired
-    EmailToGroupRepository emailToGroupRepository;
-
-    @Autowired
-    ActionRepository actionRepository;
-
-    @Autowired
-    EmailGroupRepository emailGroupRepository;
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
-    class AddressesWithMessage
+    static class AddressesWithMessage
     {
         private List<EmailAddress> emailAddresses;
         private String subject;

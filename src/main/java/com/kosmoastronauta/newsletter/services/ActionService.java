@@ -12,11 +12,15 @@ import java.util.NoSuchElementException;
 @Service
 public class ActionService
 {
-    @Autowired
-    ActionRepository actionRepository;
+    private final ActionRepository actionRepository;
+    private final EmailGroupRepository emailGroupRepository;
 
     @Autowired
-    EmailGroupRepository emailGroupRepository;
+    public ActionService(ActionRepository actionRepository, EmailGroupRepository emailGroupRepository)
+    {
+        this.actionRepository = actionRepository;
+        this.emailGroupRepository = emailGroupRepository;
+    }
 
     public List<GroupAction> getAllActionsByGroupId(long groupId) throws NoSuchFieldException, NoSuchElementException
     {

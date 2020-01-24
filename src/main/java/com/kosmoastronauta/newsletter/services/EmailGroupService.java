@@ -17,14 +17,18 @@ import java.util.logging.Logger;
 @Service
 public class EmailGroupService
 {
-    @Autowired
-    EmailGroupRepository emailGroupRepository;
+    private final EmailGroupRepository emailGroupRepository;
+    private final EmailToGroupRepository emailToGroupRepository;
+    private final EmailRepository emailRepository;
 
     @Autowired
-    EmailToGroupRepository emailToGroupRepository;
-
-    @Autowired
-    EmailRepository emailRepository;
+    public EmailGroupService(EmailGroupRepository emailGroupRepository, EmailToGroupRepository emailToGroupRepository
+            ,EmailRepository emailRepository)
+    {
+        this.emailGroupRepository = emailGroupRepository;
+        this.emailToGroupRepository = emailToGroupRepository;
+        this.emailRepository = emailRepository;
+    }
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
