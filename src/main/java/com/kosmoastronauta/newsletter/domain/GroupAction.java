@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class GroupAction
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private long groupId;

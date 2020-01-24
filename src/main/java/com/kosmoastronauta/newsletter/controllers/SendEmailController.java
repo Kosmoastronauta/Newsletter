@@ -1,7 +1,7 @@
 package com.kosmoastronauta.newsletter.controllers;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
-import com.kosmoastronauta.newsletter.domain.MesssageContent;
+import com.kosmoastronauta.newsletter.domain.MessageContent;
 import com.kosmoastronauta.newsletter.services.EmailService;
 import com.kosmoastronauta.newsletter.services.SendEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +26,14 @@ public class SendEmailController
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping(path = "/send/groups/", consumes = "application/json")
-    public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody MesssageContent messageContent)
+    public ResponseEntity<EmailAddress> sendEmailToGroups(@RequestBody MessageContent messageContent)
     {
         sendEmailService.sendEmailToGroups(messageContent);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(path = "/sendToAll/", consumes = "application/json")
-    public ResponseEntity<EmailAddress> sendEmailToAll(@RequestBody MesssageContent messageContent)
+    public ResponseEntity<EmailAddress> sendEmailToAll(@RequestBody MessageContent messageContent)
     {
         sendEmailService.sendEmailToAll(messageContent);
         return new ResponseEntity<>(HttpStatus.OK);

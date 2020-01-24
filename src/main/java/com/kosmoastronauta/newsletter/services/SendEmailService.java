@@ -2,7 +2,7 @@ package com.kosmoastronauta.newsletter.services;
 
 import com.kosmoastronauta.newsletter.domain.EmailAddress;
 import com.kosmoastronauta.newsletter.domain.EmailToGroup;
-import com.kosmoastronauta.newsletter.domain.MesssageContent;
+import com.kosmoastronauta.newsletter.domain.MessageContent;
 import com.kosmoastronauta.newsletter.repository.ActionRepository;
 import com.kosmoastronauta.newsletter.repository.EmailGroupRepository;
 import com.kosmoastronauta.newsletter.repository.EmailRepository;
@@ -43,7 +43,6 @@ public class SendEmailService
         this.actionRepository = actionRepository;
         this.emailGroupRepository = emailGroupRepository;
     }
-
 
     private final static Logger logger = Logger.getLogger(EmailService.class.getName());
 
@@ -103,7 +102,7 @@ public class SendEmailService
         return new ArrayList<>(allAddressesSet);
     }
 
-    public void sendEmailToGroups(MesssageContent message)
+    public void sendEmailToGroups(MessageContent message)
     {
         List<EmailAddress> allEmailAddressesList = getListOfUniqueEmailAddressesByGroups(message.getGroups());
         //sending
@@ -163,7 +162,7 @@ public class SendEmailService
         return mail;
     }
 
-    public void sendEmailToAll(MesssageContent message)
+    public void sendEmailToAll(MessageContent message)
     {
         List<EmailAddress> emails = new ArrayList<>();
         emailRepository.findAll().forEach(emails::add);
